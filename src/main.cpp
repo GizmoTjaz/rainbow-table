@@ -28,56 +28,46 @@ void clearFrame () {
 	}
 }
 
+void clearPixel (const uint8_t pixelIndex) {
+	leds[pixelIndex] = CRGB(0, 0, 0);
+}
+
 void paintPixel (const uint8_t pixelIndex, const uint8_t channelIndex, const uint8_t channelValue) {
 	leds[pixelIndex][channelIndex] = channelValue;
 }
 
-void drawFrame (const uint8_t *data, const size_t dataLength) {
-
-	// clearFrame();
+void paintFrame (const uint8_t *data, const size_t dataLength) {
 
 	uint8_t ledIndex = 0;
-
 	uint8_t colorChannelIndex = 0;
+	uint8_t colorChannelValuePosition = 0;
 
-	uint8_t colorChannelValue = 0;
-	uint8_t colorChannelValueIndex = 0;
-
-	size_t lastIndex = dataLength - 1;
+	clearFrame();
 
 	for (size_t i = 0; i < dataLength; i++) {
 
 		char c = data[i];
 
 		if (c == '|') {
-
+			
 			colorChannelIndex = 0;
-
-			colorChannelValue = 0;
-			colorChannelValueIndex = 0;
-
 			ledIndex++;
 
 		} else if (c == ',') {
 			
-			paintPixel(ledIndex, colorChannelIndex, colorChannelValue);
-
-			colorChannelValue = 0;
-			colorChannelValueIndex = 0;
-
 			colorChannelIndex++;
+			colorChannelValuePosition = 0;
 
-		} else if (colorChannelValueIndex < 3) { // Just in case
+		} else {
 
-			colorChannelValue += (c - '0') * pow(10, 2 - colorChannelValueIndex);
-			colorChannelValueIndex++;
+			leds[ledIndex][colorChannelIndex] += (c - '0') * pow(10, 2 - colorChannelValuePosition);
+			colorChannelValuePosition++;
 
-			if (i == lastIndex) {
-				paintPixel(ledIndex, colorChannelIndex, colorChannelValue);
+			if (colorChannelValuePosition == 3) {
+				colorChannelValuePosition = 0;
 			}
-
 		}
-		
+
 	}
 }
 
@@ -112,7 +102,7 @@ void setup() {
 
 			if (packetSize == total) {
 
-				drawFrame(packet, packetSize);
+				paintFrame(packet, packetSize);
 
 				packetSize = 0;
 				
