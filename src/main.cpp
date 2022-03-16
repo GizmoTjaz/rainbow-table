@@ -11,6 +11,9 @@
 #define NUM_LEDS 16*16
 #define NUM_LED_COLOR_VALUES NUM_LEDS*3
 
+// Utils
+#include "constants.cpp"
+
 // Variables
 CRGB leds[NUM_LEDS];
 AsyncWebServer server(80);
@@ -73,9 +76,6 @@ void drawFrame (uint8_t *data, size_t dataLength) {
 		
 	}
 }
-
-// Utils
-#include "constants.cpp"
 
 void setup() {
 
