@@ -41,7 +41,6 @@ void drawFrame (uint8_t *data, size_t dataLength) {
 	for (size_t i = 0; i < dataLength; i++) {
 
 		char c = data[i];
-		// Serial.print(c);
 
 		if (c == '|') {
 
@@ -73,80 +72,6 @@ void drawFrame (uint8_t *data, size_t dataLength) {
 		}
 		
 	}
-
-
-	// uint8_t pixelColorValues[NUM_LED_COLOR_VALUES] = { 0 };
-	// int pixelColorValueIndex = 0;
-
-	// uint8_t colorValue = 0;
-	// uint8_t colorValueIndex = 0;
-
-	// // Example payload: 0,255,0|255,0,0|255,255,255|0,0,0
-
-	// for (size_t i = 0; i < dataLength; i++) {
-
-	// 	char state = data[i];
-
-	// 	if (state == '|') {
-
-	// 		// Set the color value for the current pixel
-	// 		pixelColorValues[pixelColorValueIndex] = colorValue;
-	// 		pixelColorValueIndex++;
-
-	// 		// Reset the color value
-	// 		colorValue = 0;
-	// 		colorValueIndex = 0;
-
-	// 	} else if (state == ',') {
-
-
-
-	// 	} else {
-
-	// 		// Add the current color value to the current pixel
-	// 		colorValue += (state - '0') * pow(10, 2 - colorValueIndex);
-	// 		colorValueIndex++;
-
-	// 	}
-
-
-
-
-		
-	// 	// if (state != ',' && colorValueIndex < 3) {
-			
-	// 	// 	/*
-	// 	// 		Add parsed number to final color value
-
-	// 	// 		first number = num*100
-	// 	// 		second number = num*10
-	// 	// 		third number = num*1
-
-	// 	// 		color value = first + second + third
-	// 	// 	*/
-
-	// 	// 	colorValue += (state - '0') * pow(10, 2 - colorValueIndex);
-	// 	// 	colorValueIndex++;
-	// 	// }
-
-	// 	// // Not using an else if because we want the last number to be pushed and parsed at the same time
-
-	// 	// if (state == ',' || i == dataLength - 1) {
-
-	// 	// 	// Push the color value to the pixel color values array
-	// 	// 	pixelColorValues[pixelColorValueIndex] = colorValue;
-			
-	// 	// 	// Reset color value counting
-	// 	// 	colorValueIndex = 0;
-	// 	// 	colorValue = 0;
-
-	// 	// 	pixelColorValueIndex++;
-	// 	// }
-	// }
-
-	// // for (size_t i = 0; i < NUM_LEDS; i++) {
-	// // 	leds[i] = CRGB(pixelColorValues[i*3], pixelColorValues[i*3 + 1], pixelColorValues[i*3 + 2]);
-	// // }
 }
 
 // Utils
@@ -177,7 +102,6 @@ void setup() {
 
 			drawFrame(data, len);
 			
-			//Serial.println();
 			request->send(200);
 		}
 	);
@@ -196,50 +120,6 @@ void setup() {
 }
 
 void loop() {
-
-	// for (int row = 0; row < 16; row++) {
-    
-	// 	int startIndex = row * 16;
-
-	// 	for (int i = 0; i < 16; i++) {
-	// 		leds[i + startIndex] = CRGB::White;
-	// 	}
-
-	// 	FastLED.setBrightness(20);
-	// 	FastLED.show();
-	// 	delayMicroseconds(1);
-
-	// 	for (int i = 0; i < 16; i++) {
-	// 		leds[i + startIndex] = CRGB::Black;
-	// 	}
-	// }
-
-	// for (int i = 0; i < 256; i++) {
-	// 	if (i == X) {
-	// 		leds[i] = CRGB::Black;
-	// 	} else {
-	// 		leds[i] = CRGB::White;
-	// 	}
-	// }
-
-	// X++;
-	// delay(100);
-
-	// if (X > 0) {
-	// 	leds[X-1] = CRGB::Black;
-	// } else if (X == 0) {
-	// 	leds[NUM_LEDS - 1] = CRGB::Black;
-	// }
-
-	// leds[X] = CRGB::White;
-
-	// X++;
-
-	// if (X == NUM_LEDS) {
-	// 	X = 0;
-	// }
-
-	// delay(150);
 
 	FastLED.setBrightness(15);
 	FastLED.show();
