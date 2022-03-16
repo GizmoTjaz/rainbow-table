@@ -43,6 +43,8 @@ void paintFrame (const uint8_t *data, const size_t dataLength) {
 		if (c == '|') {
 			
 			colorChannelIndex = 0;
+			colorChannelValuePosition = 0;
+
 			ledIndex++;
 
 		} else if (c == ',') {
