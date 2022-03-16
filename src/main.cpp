@@ -174,11 +174,6 @@ void setup() {
 		[](AsyncWebServerRequest *request){},
 		NULL,
 		[](AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total) {
-			
-			Serial.print("LEN: ");
-			Serial.println(len);
-			Serial.print("TOTAL: ");
-			Serial.println(total);
 
 			drawFrame(data, len);
 			
