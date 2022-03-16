@@ -27,7 +27,7 @@ void paintPixel (uint8_t pixelIndex, uint8_t channelIndex, uint8_t channelValue)
 
 void drawFrame (uint8_t *data, size_t dataLength) {
 
-	clearFrame();
+	// clearFrame();
 
 	uint8_t ledIndex = 0;
 
