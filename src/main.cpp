@@ -1,3 +1,7 @@
+// Macros
+#define NUM_LEDS 16 * 16
+#define MAX_PACKET_SIZE NUM_LEDS * (3 * 3 + 2 + 1)
+
 #include <Arduino.h>
 #include <math.h>
 
@@ -8,13 +12,13 @@
 
 // LED
 #include <FastLED.h>
-#define NUM_LEDS 16*16
-#define NUM_LED_COLOR_VALUES NUM_LEDS*3
 
 // Utils
 #include "constants.cpp"
 
 // Variables
+uint8_t packet[MAX_PACKET_SIZE] = { 0 };
+size_t packetSize = 0;
 CRGB leds[NUM_LEDS];
 AsyncWebServer server(80);
 
@@ -24,11 +28,11 @@ void clearFrame () {
 	}
 }
 
-void paintPixel (uint8_t pixelIndex, uint8_t channelIndex, uint8_t channelValue) {
+void paintPixel (const uint8_t pixelIndex, const uint8_t channelIndex, const uint8_t channelValue) {
 	leds[pixelIndex][channelIndex] = channelValue;
 }
 
-void drawFrame (uint8_t *data, size_t dataLength) {
+void drawFrame (const uint8_t *data, const size_t dataLength) {
 
 	// clearFrame();
 
@@ -100,7 +104,23 @@ void setup() {
 		NULL,
 		[](AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total) {
 
-			drawFrame(data, len);
+			packetSize += len;
+
+			for (size_t i = 0; i < len; i++) {
+				packet[packetSize - len + i] = data[i];
+			}
+
+			if (packetSize == total) {
+
+				drawFrame(packet, &packetSize);
+
+				packetSize = 0;
+				
+				// Clear packet
+				for (size_t i = 0; i < MAX_PACKET_SIZE; i++) {
+					packet[i] = 0;
+				}
+			}
 			
 			request->send(200);
 		}
