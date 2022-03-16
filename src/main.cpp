@@ -112,11 +112,11 @@ void setup() {
 
 			if (packetSize == total) {
 
-				drawFrame(packet, &packetSize);
+				drawFrame(packet, packetSize);
 
 				packetSize = 0;
 				
-				// Clear packet
+				// Clear packet data
 				for (size_t i = 0; i < MAX_PACKET_SIZE; i++) {
 					packet[i] = 0;
 				}
