@@ -28,14 +28,6 @@ void clearFrame () {
 	}
 }
 
-void clearPixel (const uint8_t pixelIndex) {
-	leds[pixelIndex] = CRGB(0, 0, 0);
-}
-
-void paintPixel (const uint8_t pixelIndex, const uint8_t channelIndex, const uint8_t channelValue) {
-	leds[pixelIndex][channelIndex] = channelValue;
-}
-
 void paintFrame (const uint8_t *data, const size_t dataLength) {
 
 	uint8_t ledIndex = 0;
