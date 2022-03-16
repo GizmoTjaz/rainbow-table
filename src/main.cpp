@@ -120,8 +120,6 @@ void setup() {
 				for (size_t i = 0; i < MAX_PACKET_SIZE; i++) {
 					packet[i] = 0;
 				}
-			} else {
-				packet[packetSize] = '|';
 			}
 			
 			request->send(200);
