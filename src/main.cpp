@@ -2,6 +2,7 @@
 #define NUM_LEDS 16 * 16
 #define MAX_PACKET_SIZE NUM_LEDS * (3 * 3 + 2 + 1)
 
+// Core Libraries
 #include <Arduino.h>
 #include <math.h>
 
@@ -14,13 +15,15 @@
 #include <FastLED.h>
 
 // Utils
-#include "constants.cpp"
+#include "wifi.cpp"
 
-// Variables
-uint8_t packet[MAX_PACKET_SIZE] = { 0 };
-size_t packetSize = 0;
+// Structs
 CRGB leds[NUM_LEDS];
 AsyncWebServer server(80);
+AsyncWebSocket ws("/ws");
+
+// uint8_t packet[MAX_PACKET_SIZE] = { 0 };
+// size_t packetSize = 0;
 
 void clearFrame () {
 	for (size_t i = 0; i < NUM_LEDS; i++) {
@@ -81,34 +84,53 @@ void setup() {
 	Serial.println("");
 	Serial.println(WiFi.localIP());
 
-	server.on(
-		"/",
-		HTTP_POST,
-		[](AsyncWebServerRequest *request){},
-		NULL,
-		[](AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total) {
+	// server.on(
+	// 	"/",
+	// 	HTTP_POST,
+	// 	[](AsyncWebServerRequest *request){},
+	// 	NULL,
+	// 	[](AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total) {
 
-			packetSize += len;
+	// 		packetSize += len;
 
-			for (size_t i = 0; i < len; i++) {
-				packet[packetSize - len + i] = data[i];
-			}
+	// 		for (size_t i = 0; i < len; i++) {
+	// 			packet[packetSize - len + i] = data[i];
+	// 		}
 
-			if (packetSize == total) {
+	// 		if (packetSize == total) {
 
-				paintFrame(packet, packetSize);
+	// 			paintFrame(packet, packetSize);
 
-				packetSize = 0;
+	// 			packetSize = 0;
 				
-				// Clear packet data
-				for (size_t i = 0; i < MAX_PACKET_SIZE; i++) {
-					packet[i] = 0;
-				}
-			}
+	// 			// Clear packet data
+	// 			for (size_t i = 0; i < MAX_PACKET_SIZE; i++) {
+	// 				packet[i] = 0;
+	// 			}
+	// 		}
 			
-			request->send(200);
+	// 		request->send(200);
+	// 	}
+	// );
+
+	ws.onEvent([](AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len) {
+		switch (type) {
+			case WS_EVT_CONNECT:
+				Serial.printf("WebSocket client #%u connected from %s\n", client->id(), client->remoteIP().toString().c_str());
+				break;
+			case WS_EVT_DISCONNECT:
+				Serial.printf("WebSocket client #%u disconnected\n", client->id());
+				break;
+			case WS_EVT_DATA:
+				paintFrame(data, len);
+				break;
+			case WS_EVT_PONG:
+    		case WS_EVT_ERROR:
+     			break;
 		}
-	);
+	});
+
+	server.addHandler(&ws);
 
 	server.onNotFound([](AsyncWebServerRequest *request) {
 		if (request->method() == HTTP_OPTIONS) {
@@ -128,5 +150,5 @@ void loop() {
 	FastLED.setBrightness(15);
 	FastLED.show();
 
-	delay(10);
+	delay(100);
 }
