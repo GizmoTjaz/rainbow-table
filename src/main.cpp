@@ -1,6 +1,6 @@
 // Macros
 #define NUM_LEDS 16 * 16
-#define MAX_PACKET_SIZE NUM_LEDS * (3 * 3 + 2 + 1)
+#define MAX_PACKET_LENGTH NUM_LEDS * (3 * 3 + 2 + 1)
 
 // Core Libraries
 #include <Arduino.h>
@@ -22,8 +22,9 @@ CRGB leds[NUM_LEDS];
 AsyncWebServer server(80);
 AsyncWebSocket ws("/ws");
 
-// uint8_t packet[MAX_PACKET_SIZE] = { 0 };
-// size_t packetSize = 0;
+// Variables
+uint8_t packet[MAX_PACKET_LENGTH] = { 0 };
+size_t packetLength = 0;
 
 void clearFrame () {
 	for (size_t i = 0; i < NUM_LEDS; i++) {
@@ -104,7 +105,7 @@ void setup() {
 	// 			packetSize = 0;
 				
 	// 			// Clear packet data
-	// 			for (size_t i = 0; i < MAX_PACKET_SIZE; i++) {
+	// 			for (size_t i = 0; i < MAX_PACKET_LENGTH; i++) {
 	// 				packet[i] = 0;
 	// 			}
 	// 		}
@@ -114,6 +115,9 @@ void setup() {
 	// );
 
 	ws.onEvent([](AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len) {
+		
+		AwsFrameInfo *info = (AwsFrameInfo*)arg;
+		
 		switch (type) {
 			case WS_EVT_CONNECT:
 				Serial.printf("WebSocket client #%u connected from %s\n", client->id(), client->remoteIP().toString().c_str());
@@ -122,7 +126,30 @@ void setup() {
 				Serial.printf("WebSocket client #%u disconnected\n", client->id());
 				break;
 			case WS_EVT_DATA:
-				paintFrame(data, len);
+
+				if (info->index == 0 && info->len == len) { // Packets not split
+					paintFrame(data, len);
+				} else { // Incomplete packet
+
+					for (size_t i = 0; i < len; i++) {
+						packet[packetLength + i] = data[i];
+					}
+
+					packetLength += len;
+				}
+
+				if (packetLength == info->len) { // Final packet
+					
+					paintFrame(packet, packetLength);
+					
+					// Clear packet data
+					for (size_t i = 0; i < MAX_PACKET_LENGTH; i++) {
+						packet[i] = 0;
+					}
+
+					packetLength = 0;
+				}
+
 				break;
 			case WS_EVT_PONG:
     		case WS_EVT_ERROR:
@@ -150,5 +177,5 @@ void loop() {
 	FastLED.setBrightness(15);
 	FastLED.show();
 
-	delay(100);
+	delay(10);
 }
