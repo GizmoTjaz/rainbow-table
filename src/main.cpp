@@ -59,6 +59,7 @@ void paintFrame (const uint8_t *data, const size_t dataLength) {
 		} else {
 
 			leds[ledIndex][colorChannelIndex] += (c - '0') * pow(10, 2 - colorChannelValuePosition);
+
 			colorChannelValuePosition++;
 
 			if (colorChannelValuePosition == 3) {
@@ -66,6 +67,21 @@ void paintFrame (const uint8_t *data, const size_t dataLength) {
 			}
 		}
 
+	}
+
+	for (uint8_t row = 1; row <= 16; row++) {
+		if (row % 2 == 0) {
+			for (uint8_t pix = 0; pix < 8; pix++) {
+				
+				uint8_t start = (row - 1) * 16;
+				uint8_t end = start + 15;
+
+				CRGB temp = leds[end - pix];
+
+				leds[end - pix] = leds[start + pix];
+				leds[start + pix] = temp;
+			}
+		}
 	}
 }
 
@@ -84,35 +100,6 @@ void setup() {
 
 	Serial.println("");
 	Serial.println(WiFi.localIP());
-
-	// server.on(
-	// 	"/",
-	// 	HTTP_POST,
-	// 	[](AsyncWebServerRequest *request){},
-	// 	NULL,
-	// 	[](AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total) {
-
-	// 		packetSize += len;
-
-	// 		for (size_t i = 0; i < len; i++) {
-	// 			packet[packetSize - len + i] = data[i];
-	// 		}
-
-	// 		if (packetSize == total) {
-
-	// 			paintFrame(packet, packetSize);
-
-	// 			packetSize = 0;
-				
-	// 			// Clear packet data
-	// 			for (size_t i = 0; i < MAX_PACKET_LENGTH; i++) {
-	// 				packet[i] = 0;
-	// 			}
-	// 		}
-			
-	// 		request->send(200);
-	// 	}
-	// );
 
 	ws.onEvent([](AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len) {
 		
