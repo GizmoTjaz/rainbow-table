@@ -174,7 +174,7 @@ void setup() {
 
 void loop() {
 
-	FastLED.setBrightness(15);
+	FastLED.setBrightness(10);
 	FastLED.show();
 
 	delay(10);
