@@ -1,0 +1,25 @@
+{
+	"folders": [
+		{
+			"name": "rainbow-table",
+			"path": "."
+		},
+		{
+			"name": "controller",
+			"path": "controller"
+		},
+		{
+			"name": "app",
+			"path": "app"
+		},
+		{
+			"name": "test",
+			"path": "test"
+		},
+		{
+			"name": "bad-apple",
+			"path": "test\\bad-apple"
+		}
+	],
+	"settings": {}
+}
