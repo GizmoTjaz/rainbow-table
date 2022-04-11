@@ -33,9 +33,9 @@ void clearFrame () {
 	}
 }
 
-void writeColorChannelValue (const uint8_t *ledIndex, const uint8_t *colorChannelIndex, const uint8_t *colorChannelValue) {
-	leds[*ledIndex][*colorChannelIndex] = *colorChannelValue;
-}
+// void writeColorChannelValue (const uint8_t *ledIndex, const uint8_t *colorChannelIndex, const uint8_t *colorChannelValue) {
+// 	leds[*ledIndex][*colorChannelIndex] = *colorChannelValue;
+// }
 
 void paintFrame (const uint8_t *data, const size_t dataLength) {
 
@@ -83,7 +83,6 @@ void paintFrame (const uint8_t *data, const size_t dataLength) {
 			// 		break;
 			// }
 
-			// Fancier way, but less performant
 			leds[ledIndex][colorChannelIndex] += (c - '0') * pow(10, 2 - colorChannelValuePosition);
 
 			colorChannelValuePosition++;
