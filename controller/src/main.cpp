@@ -25,6 +25,7 @@ AsyncWebSocket ws("/ws");
 // Variables
 uint8_t packet[MAX_PACKET_LENGTH] = { 0 };
 size_t packetLength = 0;
+bool isBusy = false;
 
 void clearFrame () {
 	for (size_t i = 0; i < NUM_LEDS; i++) {
@@ -43,6 +44,7 @@ void paintFrame (const uint8_t *data, const size_t dataLength) {
 	uint8_t colorChannelValuePosition = 0;
 	uint8_t colorChannelValue = 0;
 
+	isBusy = true;
 	clearFrame();
 
 	for (size_t i = 0; i < dataLength; i++) {
@@ -110,6 +112,8 @@ void paintFrame (const uint8_t *data, const size_t dataLength) {
 			}
 		}
 	}
+
+	isBusy = false;
 }
 
 void setup() {
@@ -188,8 +192,10 @@ void setup() {
 
 void loop() {
 
-	FastLED.setBrightness(10);
-	FastLED.show();
+	if (!isBusy) {
+		FastLED.setBrightness(10);
+		FastLED.show();
+	}
 
 	delay(10);
 }
