@@ -1,4 +1,5 @@
 .DS_Store
+node_modules
 
 # ProjectIO
 .pio
@@ -11,7 +12,6 @@
 controller/include/wifi.cpp
 
 # App
-app/node_modules
 app/.expo
 app/dist
 app/npm-debug.*
