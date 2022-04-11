@@ -22,3 +22,6 @@ app/*.key
 app/*.mobileprovision
 app/*.orig.*
 app/web-build
+
+# Bad Apple
+test/bad-apple/build
