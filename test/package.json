@@ -1,0 +1,20 @@
+{
+  "name": "rainbow-table",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./src/index.js",
+  "scripts": {
+    "lint": "eslint src",
+    "start": "node src/index.js"
+  },
+  "author": "GizmoTjaz",
+  "license": "MIT",
+  "devDependencies": {
+    "@gizmo-dev/eslint-config": "^1.1.0",
+    "eslint": "^8.11.0"
+  },
+  "dependencies": {
+    "axios": "^0.26.0",
+    "websocket": "^1.0.34"
+  }
+}
