@@ -32,11 +32,16 @@ void clearFrame () {
 	}
 }
 
+void writeColorChannelValue (const uint8_t *ledIndex, const uint8_t *colorChannelIndex, const uint8_t *colorChannelValue) {
+	leds[*ledIndex][*colorChannelIndex] = *colorChannelValue;
+}
+
 void paintFrame (const uint8_t *data, const size_t dataLength) {
 
 	uint8_t ledIndex = 0;
 	uint8_t colorChannelIndex = 0;
 	uint8_t colorChannelValuePosition = 0;
+	uint8_t colorChannelValue = 0;
 
 	clearFrame();
 
@@ -45,6 +50,8 @@ void paintFrame (const uint8_t *data, const size_t dataLength) {
 		char c = data[i];
 
 		if (c == '|') {
+
+			writeColorChannelValue(&ledIndex, &colorChannelIndex, &colorChannelValue);
 			
 			colorChannelIndex = 0;
 			colorChannelValuePosition = 0;
@@ -52,13 +59,30 @@ void paintFrame (const uint8_t *data, const size_t dataLength) {
 			ledIndex++;
 
 		} else if (c == ',') {
+
+			writeColorChannelValue(&ledIndex, &colorChannelIndex, &colorChannelValue);
 			
 			colorChannelIndex++;
 			colorChannelValuePosition = 0;
 
 		} else {
 
-			leds[ledIndex][colorChannelIndex] += (c - '0') * pow(10, 2 - colorChannelValuePosition);
+			switch (colorChannelValuePosition) {
+				case 0:
+					colorChannelValue += (c - '0') * 100;
+					break;
+				case 1:
+					colorChannelValue += (c - '0') * 10;
+					break;
+				case 2:
+					colorChannelValue += (c - '0');
+					break;
+				default:
+					break;
+			}
+
+			// Fancier way, but less performant
+			// leds[ledIndex][colorChannelIndex] += (c - '0') * pow(10, 2 - colorChannelValuePosition);
 
 			colorChannelValuePosition++;
 
@@ -68,6 +92,9 @@ void paintFrame (const uint8_t *data, const size_t dataLength) {
 		}
 
 	}
+
+	// Update the last LED's last color channel
+	writeColorChannelValue(&ledIndex, &colorChannelIndex, &colorChannelValue);
 
 	for (uint8_t row = 1; row <= 16; row++) {
 		if (row % 2 == 0) {
