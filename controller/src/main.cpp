@@ -115,7 +115,7 @@ void paintFrame (const uint8_t *data, const size_t dataLength) {
 	isBusy = false;
 }
 
-void setup() {
+void setup () {
 
 	Serial.begin(9600);
   
@@ -189,7 +189,7 @@ void setup() {
 	server.begin();
 }
 
-void loop() {
+void loop () {
 
 	if (!isBusy) {
 		FastLED.setBrightness(10);
