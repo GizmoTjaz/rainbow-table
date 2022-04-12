@@ -49,31 +49,31 @@ client.on("connect", function(connection) {
         console.log("echo-protocol Connection Closed");
     });
 
-	//let i = 0;
+	let i = 0;
     
-	// setInterval(() => {
+	setInterval(() => {
 
-	// 	frame[i] = { r: 255, g: 0, b: 0 };
+		frame[i] = { r: 255, g: 0, b: 0 };
 
-	// 	if (i === (FRAME_SIZE - 1)) {
-	// 		frame[FRAME_SIZE - 1] = { r: 0, g: 0, b: 0 };
-	// 		i = 0;
-	// 	} else {
-	// 		frame[i - 1] = { r: 0, g: 0, b: 0 };
-	// 		i++;
-	// 	}
-
-	// 	//console.log(serializePixelData(frame));
-	// 	connection.sendUTF(serializePixelData(frame));
-	// }, 100);
-
-	for (let i = 0; i < FRAME_SIZE; i++) {
-		if (i % 2 == 0) {
-			frame.push({ r: 255, g: 255, b: 255 });
+		if (i === FRAME_SIZE) {
+			frame[FRAME_SIZE - 1] = { r: 0, g: 0, b: 0 };
+			i = 0;
 		} else {
-			frame.push({ r: 0, g: 0, b: 0 });
+			frame[i - 1] = { r: 0, g: 0, b: 0 };
+			i++;
 		}
-	}
+
+		//console.log(serializePixelData(frame));
+		connection.sendUTF(serializePixelData(frame));
+	}, 100);
+
+	// for (let i = 0; i < FRAME_SIZE; i++) {
+	// 	if (i % 2 == 0) {
+	// 		frame.push({ r: 255, g: 255, b: 255 });
+	// 	} else {
+	// 		frame.push({ r: 0, g: 0, b: 0 });
+	// 	}
+	// }
 
 	connection.sendUTF(serializePixelData(frame));
 });
