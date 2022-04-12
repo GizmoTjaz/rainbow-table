@@ -1,6 +1,9 @@
 #ifndef RENDER_H
 #define RENDER_H
 
+// Core
+#include <string>
+
 // Utils
 #include "env.h"
 
@@ -16,6 +19,10 @@ void renderCanvas (const CRGBArray<NUM_LEDS> &canvas, const uint8_t (&canvasData
 	uint8_t colorChannelIndex = 0;
 	uint8_t colorChannelValuePosition = 0;
 
+	bool isSkipMode = false;
+
+	std::string skipIndex = "";
+
 	CRGB _pixel = CRGB(0, 0, 0);
 
 	for (size_t i = 0; i < canvasDataLength; i++) {
@@ -29,6 +36,16 @@ void renderCanvas (const CRGBArray<NUM_LEDS> &canvas, const uint8_t (&canvasData
 
 		switch (c) {
 			case '|':
+
+				if (isSkipMode) {
+
+					pixelIndex = std::atoi(skipIndex.c_str());
+
+					skipIndex = "";
+					isSkipMode = false;
+
+					break;
+				}
 
 				colorChannelIndex = 0;
 				colorChannelValuePosition = 0;
@@ -46,9 +63,19 @@ void renderCanvas (const CRGBArray<NUM_LEDS> &canvas, const uint8_t (&canvasData
 				colorChannelValuePosition = 0;
 			
 				break;
+			case 'S':
+
+				isSkipMode = true;
+
+				break;
 			default:
 
-				if (colorChannelIndex < 3) {
+				if (isSkipMode) {
+
+					skipIndex += c;
+
+					break;
+				} else if (colorChannelIndex < 3) {
 
 					_pixel[colorChannelIndex] += (c - '0') * pow(10, 2 - colorChannelValuePosition);
 
