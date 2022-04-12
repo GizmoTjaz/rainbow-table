@@ -21,5 +21,17 @@
 			"path": "../test\\bad-apple"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"files.associations": {
+			"array": "cpp",
+			"vector": "cpp",
+			"xstring": "cpp",
+			"xutility": "cpp",
+			"string": "cpp",
+			"string_view": "cpp",
+			"queue": "cpp",
+			"stack": "cpp",
+			"random": "cpp"
+		}
+	}
 }
