@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 
 import Buttons from "./Buttons";
+import Grid from "./Grid";
 
 export default class App extends React.Component {
 
@@ -20,16 +21,22 @@ export default class App extends React.Component {
 
 	addPixel (pixelIndex) {
 		if (!this.state.activeIndexes.includes(pixelIndex)) {
+
 			this.setState({
 				activeIndexes: [ ...this.state.activeIndexes, pixelIndex ]
 			});
+
+			//this.ws.send(`S${pixelIndex}|255,255,255`);
 		}
 	}
 
 	removePixel (pixelIndex) {
+
 		this.setState({
 			activeIndexes: this.state.activeIndexes.filter(index => index !== pixelIndex)
 		});
+
+		//this.ws.send(`S${pixelIndex}|0,0,0`);
 	}
 
 	paintFrame () {
@@ -78,9 +85,11 @@ export default class App extends React.Component {
 		this.paintFrame();
 	}
 
-	sendButton (buttonIndex) {
+	sendButton (buttonX, buttonY) {
 
 		// console.log(buttonIndex);
+
+		const buttonIndex = (buttonY * 16) + buttonX;
 		
 		if (this.state.activeIndexes.includes(buttonIndex)) {
 			this.removePixel(buttonIndex);
@@ -93,11 +102,12 @@ export default class App extends React.Component {
 
 	render () {
 		return (
-			<View style={styles.container}>
+			<SafeAreaView style={styles.container}>
 				{ !this.state.isReady && <Text>Connecting...</Text> }
-				{ this.state.isReady && <Buttons style={styles.grid} onActivateButton={ (buttonIndex) => this.sendButton(buttonIndex) } /> }
+				{ /*this.state.isReady && <Buttons style={styles.grid} onActivateButton={ (buttonIndex) => this.sendButton(buttonIndex) } />*/ }
+				{ this.state.isReady && <Grid style={styles.grid} onActivateButton={ (buttonX, buttonY) => this.sendButton(buttonX, buttonY) } /> }
 				<StatusBar style="auto" />
-			</View>
+			</SafeAreaView>
 		);
 	}
 }
