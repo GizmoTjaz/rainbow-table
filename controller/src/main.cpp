@@ -12,9 +12,10 @@
 
 // Utils
 #include "env.h"
+#include "render.h"
 
 // Structs
-CRGB leds[NUM_LEDS];
+CRGBArray<NUM_LEDS> canvas;
 AsyncWebServer server(80);
 AsyncWebSocket ws("/ws");
 
@@ -23,99 +24,11 @@ uint8_t packet[MAX_PACKET_LENGTH] = { 0 };
 size_t packetLength = 0;
 bool isBusy = false;
 
-void clearFrame () {
-	for (size_t i = 0; i < NUM_LEDS; i++) {
-		leds[i] = CRGB(0, 0, 0);
-	}
-}
-
-// void writeColorChannelValue (const uint8_t *ledIndex, const uint8_t *colorChannelIndex, const uint8_t *colorChannelValue) {
-// 	leds[*ledIndex][*colorChannelIndex] = *colorChannelValue;
-// }
-
-void paintFrame (const uint8_t *data, const size_t dataLength) {
-
-	uint8_t ledIndex = 0;
-	uint8_t colorChannelIndex = 0;
-	uint8_t colorChannelValuePosition = 0;
-	// uint8_t colorChannelValue = 0;
-
-	isBusy = true;
-	clearFrame();
-
-	for (size_t i = 0; i < dataLength; i++) {
-
-		char c = data[i];
-
-		if (c == '|') {
-
-			//writeColorChannelValue(&ledIndex, &colorChannelIndex, &colorChannelValue);
-			
-			colorChannelIndex = 0;
-			colorChannelValuePosition = 0;
-
-			ledIndex++;
-
-		} else if (c == ',') {
-
-			//writeColorChannelValue(&ledIndex, &colorChannelIndex, &colorChannelValue);
-			
-			colorChannelIndex++;
-			colorChannelValuePosition = 0;
-
-		} else {
-
-			// switch (colorChannelValuePosition) {
-			// 	case 0:
-			// 		colorChannelValue += (c - '0') * 100;
-			// 		break;
-			// 	case 1:
-			// 		colorChannelValue += (c - '0') * 10;
-			// 		break;
-			// 	case 2:
-			// 		colorChannelValue += (c - '0');
-			// 		break;
-			// 	default:
-			// 		break;
-			// }
-
-			leds[ledIndex][colorChannelIndex] += (c - '0') * pow(10, 2 - colorChannelValuePosition);
-
-			colorChannelValuePosition++;
-
-			if (colorChannelValuePosition == 3) {
-				colorChannelValuePosition = 0;
-			}
-		}
-
-	}
-
-	// Update the last LED's last color channel
-	//writeColorChannelValue(&ledIndex, &colorChannelIndex, &colorChannelValue);
-
-	// for (uint8_t row = 1; row <= 16; row++) {
-	// 	if (row % 2 == 0) {
-	// 		for (uint8_t pix = 0; pix < 8; pix++) {
-				
-	// 			uint8_t start = (row - 1) * 16;
-	// 			uint8_t end = start + 15;
-
-	// 			CRGB temp = leds[end - pix];
-
-	// 			leds[end - pix] = leds[start + pix];
-	// 			leds[start + pix] = temp;
-	// 		}
-	// 	}
-	// }
-
-	isBusy = false;
-}
-
 void setup () {
 
 	Serial.begin(9600);
   
-	FastLED.addLeds<NEOPIXEL, 5>(leds, NUM_LEDS);
+	FastLED.addLeds<NEOPIXEL, 5>(canvas, NUM_LEDS);
 
 	WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
 
@@ -127,7 +40,7 @@ void setup () {
 	Serial.println("");
 	Serial.println(WiFi.localIP());
 
-	ws.onEvent([](AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len) {
+	ws.onEvent([](AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t dataLength) {
 		
 		AwsFrameInfo *info = (AwsFrameInfo*)arg;
 		
@@ -140,20 +53,17 @@ void setup () {
 				break;
 			case WS_EVT_DATA:
 
-				if (info->index == 0 && info->len == len) { // Packets not split
-					paintFrame(data, len);
-				} else { // Incomplete packet
-
-					for (size_t i = 0; i < len; i++) {
-						packet[packetLength + i] = data[i];
-					}
-
-					packetLength += len;
+				for (size_t i = 0; i < dataLength; i++) {
+					packet[packetLength + i] = data[i];
 				}
+
+				packetLength += dataLength;
 
 				if (packetLength == info->len) { // Final packet
 					
-					paintFrame(packet, packetLength);
+					isBusy = true;
+					renderCanvas(canvas, packet, packetLength);
+					isBusy = false;
 					
 					// Clear packet data
 					for (size_t i = 0; i < MAX_PACKET_LENGTH; i++) {
