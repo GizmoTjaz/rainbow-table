@@ -1,8 +1,4 @@
-// Macros
-#define NUM_LEDS 16 * 16
-#define MAX_PACKET_LENGTH NUM_LEDS * (3 * 3 + 2 + 1)
-
-// Core Libraries
+// Core
 #include <Arduino.h>
 #include <math.h>
 
@@ -15,7 +11,7 @@
 #include <FastLED.h>
 
 // Utils
-#include "wifi.cpp"
+#include "env.h"
 
 // Structs
 CRGB leds[NUM_LEDS];
