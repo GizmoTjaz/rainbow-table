@@ -18,6 +18,7 @@ void renderCanvas (const CRGBArray<NUM_LEDS> &canvas, const uint8_t (&canvasData
 
 	for (size_t i = 0; i < canvasDataLength; i++) {
 
+		// Don't allow oversized packets
 		if (pixelIndex >= NUM_LEDS) {
 			break;
 		}
