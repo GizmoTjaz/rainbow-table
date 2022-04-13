@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { Fragment, useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { Button, SafeAreaView, StyleSheet, Text, View } from "react-native";
 
 import Buttons from "./Buttons";
 import Grid from "./Grid";
@@ -19,43 +19,43 @@ export default class App extends React.Component {
 		this.ws = new WebSocket("ws://192.168.64.112/ws");
 	}
 
-	addPixel (pixelIndex) {
-		if (!this.state.activeIndexes.includes(pixelIndex)) {
+	// addPixel (pixelIndex) {
+	// 	if (!this.state.activeIndexes.includes(pixelIndex)) {
 
-			this.setState({
-				activeIndexes: [ ...this.state.activeIndexes, pixelIndex ]
-			});
+	// 		this.setState({
+	// 			activeIndexes: [ ...this.state.activeIndexes, pixelIndex ]
+	// 		});
 
-			//this.ws.send(`S${pixelIndex}|255,255,255`);
-		}
-	}
+	// 		//this.ws.send(`S${pixelIndex}|255,255,255`);
+	// 	}
+	// }
 
-	removePixel (pixelIndex) {
+	// removePixel (pixelIndex) {
 
-		this.setState({
-			activeIndexes: this.state.activeIndexes.filter(index => index !== pixelIndex)
+	// 	this.setState({
+	// 		activeIndexes: this.state.activeIndexes.filter(index => index !== pixelIndex)
+	// 	});
+
+	// 	//this.ws.send(`S${pixelIndex}|0,0,0`);
+	// }
+
+	paintFrame (activeIndexes) {
+
+		let _frame = new Array(16*16).fill("0,0,0|");
+
+		activeIndexes.forEach(pixelIndex => {
+			_frame[pixelIndex] = "255,255,255|";
 		});
 
-		//this.ws.send(`S${pixelIndex}|0,0,0`);
-	}
-
-	paintFrame () {
-
-		let frame = "";
-
-		for (let i = 0; i < 16*16; i++) {
-			if (this.state.activeIndexes.includes(i)) {
-				frame += "255,255,255|";
-			} else {
-				frame += "0,0,0|";
-			}
-		}
-
-		frame = frame.slice(0, -1);
+		_frame = _frame.join("").slice(0, -1);
 
 		//console.log(this.state.activeIndexes);
 
-		this.ws.send(frame);
+		this.ws.send(_frame);
+	}
+
+	clearFrame () {
+		this.paintFrame([]);
 	}
 
 	componentDidMount () {
@@ -68,7 +68,7 @@ export default class App extends React.Component {
 				isReady: true
 			});
 
-			this.paintFrame();
+			//this.paintFrame();
 		};
 
 		this.ws.onerror = (e) => {
@@ -81,46 +81,58 @@ export default class App extends React.Component {
 
 	}
 
-	componentDidUpdate () {
-		this.paintFrame();
-	}
+	// componentDidUpdate () {
+	// 	this.paintFrame();
+	// }
 
-	sendButton (buttonX, buttonY) {
-
-		// console.log(buttonIndex);
-
-		const buttonIndex = (buttonY * 16) + buttonX;
+	// sendButton (buttonIndex) {
 		
-		if (this.state.activeIndexes.includes(buttonIndex)) {
-			this.removePixel(buttonIndex);
-		} else {
-			this.addPixel(buttonIndex);
-		}
+	// 	if (this.state.activeIndexes.includes(buttonIndex)) {
+	// 		this.removePixel(buttonIndex);
+	// 	} else {
+	// 		this.addPixel(buttonIndex);
+	// 	}
 
-		this.paintFrame();		
-	}
+	// 	this.paintFrame();		
+	// }
 
 	render () {
 		return (
-			<SafeAreaView style={styles.container}>
-				{ !this.state.isReady && <Text>Connecting...</Text> }
-				{ /*this.state.isReady && <Buttons style={styles.grid} onActivateButton={ (buttonIndex) => this.sendButton(buttonIndex) } />*/ }
-				{ this.state.isReady && <Grid style={styles.grid} onActivateButton={ (buttonX, buttonY) => this.sendButton(buttonX, buttonY) } /> }
-				<StatusBar style="auto" />
-			</SafeAreaView>
+			<Fragment>
+				<StatusBar style="light" />
+				<View style={styles.background}>
+					<SafeAreaView style={styles.container}>
+						<Button
+							title="Clear"
+							color="#a31ffc"
+							onPress={ () => this.clearFrame() }
+						/>
+						{ !this.state.isReady && <Text>Connecting...</Text> }
+						{ /*this.state.isReady && <Buttons style={styles.grid} onActivateButton={ (buttonIndex) => this.sendButton(buttonIndex) } />*/ }
+						{ this.state.isReady && <Grid style={styles.grid} onData={ data => this.paintFrame(data) } sendDirectly={ data => this.ws.send(data) } /> }
+					</SafeAreaView>
+				</View>
+			</Fragment>
 		);
 	}
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  grid: {
-	  width: "100%",
-	  height: "100%"
-  }
+	background: {
+		position: "absolute",
+		width: "100%",
+		height: "100%",
+		top: 0,
+		left: 0,
+		backgroundColor: "#222"
+	},
+	container: {
+		flex: 1,
+		alignItems: "center",
+		justifyContent: "center",
+	},
+	grid: {
+		width: "100%",
+		height: "100%"
+	}
 });
