@@ -42,7 +42,7 @@ void setup () {
 	Serial.println(WiFi.localIP());
 
 	ws.onEvent([](AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t dataLength) {
-		
+
 		AwsFrameInfo *info = (AwsFrameInfo*)arg;
 		
 		switch (type) {
@@ -53,6 +53,10 @@ void setup () {
 				Serial.printf("WebSocket client #%u disconnected\n", client->id());
 				break;
 			case WS_EVT_DATA:
+
+				if (isBusy) {
+					return;
+				}
 
 				for (size_t i = 0; i < dataLength; i++) {
 					packet[packetLength + i] = data[i];
