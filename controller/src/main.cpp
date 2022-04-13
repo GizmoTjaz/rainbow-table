@@ -29,6 +29,7 @@ void setup () {
 	Serial.begin(9600);
   
 	FastLED.addLeds<NEOPIXEL, 5>(canvas, NUM_LEDS);
+	FastLED.setMaxPowerInVoltsAndMilliamps(5, 800);
 
 	WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
 
