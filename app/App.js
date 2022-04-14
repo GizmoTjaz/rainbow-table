@@ -41,6 +41,11 @@ export default class App extends React.Component {
 
 	paintFrame (activeIndexes) {
 
+		if (activeIndexes.length === 0) {
+			this.clearFrame();
+			return;
+		}
+		
 		let _frame = new Array(16*16).fill("0,0,0|");
 
 		activeIndexes.forEach(pixelIndex => {
@@ -55,7 +60,7 @@ export default class App extends React.Component {
 	}
 
 	clearFrame () {
-		this.paintFrame([]);
+		this.ws.send("C");
 	}
 
 	componentDidMount () {
