@@ -92,6 +92,11 @@ void renderCanvas (const CRGBArray<NUM_LEDS> &canvas, const uint8_t (&canvasData
 				isSkipMode = true;
 
 				break;
+			case 'C':
+
+				clearCanvas(canvas);
+
+				break;
 			default:
 
 				if (isSkipMode) {
