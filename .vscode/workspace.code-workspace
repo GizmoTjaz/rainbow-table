@@ -31,7 +31,18 @@
 			"string_view": "cpp",
 			"queue": "cpp",
 			"stack": "cpp",
-			"random": "cpp"
+			"random": "cpp",
+			"chrono": "cpp",
+			"deque": "cpp",
+			"format": "cpp",
+			"forward_list": "cpp",
+			"initializer_list": "cpp",
+			"list": "cpp",
+			"regex": "cpp",
+			"xhash": "cpp",
+			"xtree": "cpp",
+			"unordered_map": "cpp",
+			"unordered_set": "cpp"
 		}
 	}
 }
