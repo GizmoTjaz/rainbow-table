@@ -8,4 +8,7 @@
 // LED Matrix
 #define NUM_LEDS 16 * 16
 #define MAX_PACKET_LENGTH NUM_LEDS * (3 * 3 + 2 + 1)
+
+// PIN setup
+#define MATRIX_DATA_PIN 25
 ```
