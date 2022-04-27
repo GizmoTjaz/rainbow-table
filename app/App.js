@@ -16,7 +16,7 @@ export default class App extends React.Component {
 			activeIndexes: []
 		}
 
-		this.ws = new WebSocket("ws://192.168.64.112/ws");
+		this.ws = new WebSocket("ws://192.168.64.109/ws");
 	}
 
 	// addPixel (pixelIndex) {
