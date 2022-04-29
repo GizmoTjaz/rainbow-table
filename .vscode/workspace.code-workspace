@@ -5,6 +5,10 @@
 			"path": "../"
 		},
 		{
+			"name": "model",
+			"path": "../model"
+		},
+		{
 			"name": "controller",
 			"path": "../controller"
 		},
