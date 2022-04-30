@@ -3,6 +3,7 @@
 
 // Core
 #include <string>
+#include <list>
 
 // Utils
 #include "env.h"
@@ -37,7 +38,7 @@ void clearCanvas (const CRGBArray<NUM_LEDS> &canvas) {
 	}
 }
 
-void renderCanvas (const CRGBArray<NUM_LEDS> &canvas, const uint8_t (&canvasData)[MAX_PACKET_LENGTH], const size_t canvasDataLength) {
+void renderCanvas (const CRGBArray<NUM_LEDS> &canvas, const std::list<char> &canvasData, const size_t &canvasDataLength) {
 
 	uint8_t pixelIndex = 0;
 	uint8_t colorChannelIndex = 0;
@@ -46,17 +47,16 @@ void renderCanvas (const CRGBArray<NUM_LEDS> &canvas, const uint8_t (&canvasData
 	bool isSkipMode = false;
 
 	std::string skipIndex = "";
+	std::list<char> colorChannelValueDigits;
 
 	CRGB _pixel = CRGB(0, 0, 0);
 
-	for (size_t i = 0; i < canvasDataLength; i++) {
+	for (const char &c : canvasData) {
 
 		// Don't allow non-existent LEDs to be called
 		if (pixelIndex >= NUM_LEDS) {
 			break;
 		}
-
-		char c = canvasData[i];
 
 		switch (c) {
 			case '|':
@@ -68,33 +68,31 @@ void renderCanvas (const CRGBArray<NUM_LEDS> &canvas, const uint8_t (&canvasData
 					skipIndex = "";
 					isSkipMode = false;
 
-					break;
+				} else {
+
+					// Write temp pixel data to real pixel
+					writePixelData(canvas, pixelIndex, _pixel);
+					_pixel = CRGB(0, 0, 0);
+
+					colorChannelIndex = 0;
+
+					pixelIndex++;
 				}
-
-				colorChannelIndex = 0;
-				colorChannelValuePosition = 0;
-
-				// Write temp pixel data to real pixel
-				writePixelData(canvas, pixelIndex, _pixel);
-				_pixel = CRGB(0, 0, 0);
-
-				pixelIndex++;
 
 				break;
 			case ',':
-			
-				colorChannelIndex++;
-				colorChannelValuePosition = 0;
-			
-				break;
-			case 'S':
 
-				isSkipMode = true;
+				colorChannelIndex++;
 
 				break;
 			case 'C':
 
 				clearCanvas(canvas);
+				
+				break;
+			case 'S':
+
+				isSkipMode = true;
 
 				break;
 			default:
@@ -103,25 +101,117 @@ void renderCanvas (const CRGBArray<NUM_LEDS> &canvas, const uint8_t (&canvasData
 
 					skipIndex += c;
 
-					break;
-				} else if (colorChannelIndex < 3) {
-
-					_pixel[colorChannelIndex] += (c - '0') * pow(10, 2 - colorChannelValuePosition);
+				} else {
 
 					colorChannelValuePosition++;
+				
+					colorChannelValueDigits.push_back(c);
 
 					if (colorChannelValuePosition == 3) {
+
+						// Write color channel digits into one color channel value
+						for (uint8_t j = 0; j < 3; j++) {
+							if (colorChannelValueDigits.size() > 0) {
+
+								_pixel[colorChannelIndex] += (colorChannelValueDigits.back() - '0') * pow(10, j);
+
+								colorChannelValueDigits.pop_back();
+							}
+						}
+
 						colorChannelValuePosition = 0;
 					}
 				}
-
-				// Write last pixel too
-				if ((i + 1) == canvasDataLength) {
-					writePixelData(canvas, pixelIndex, _pixel);
-					_pixel = CRGB(0, 0, 0);
-				}
 		}
 	}
+
+	// Write last pixel too
+	if (canvasData.back() != '|') {
+		writePixelData(canvas, pixelIndex, _pixel);
+	}
+
+	// for (size_t i = 0; i < canvasDataLength; i++) {
+
+	// 	// Don't allow non-existent LEDs to be called
+	// 	if (pixelIndex >= NUM_LEDS) {
+	// 		break;
+	// 	}
+
+	// 	char c = canvasData[i];
+
+	// 	switch (c) {
+	// 		case '|':
+
+	// 			if (isSkipMode) {
+
+	// 				pixelIndex = std::atoi(skipIndex.c_str());
+
+	// 				skipIndex = "";
+	// 				isSkipMode = false;
+
+	// 				break;
+	// 			}
+
+	// 			colorChannelIndex = 0;
+	// 			colorChannelValuePosition = 0;
+
+	// 			// Write temp pixel data to real pixel
+	// 			writePixelData(canvas, pixelIndex, _pixel);
+	// 			_pixel = CRGB(0, 0, 0);
+
+	// 			pixelIndex++;
+
+	// 			break;
+	// 		case ',':
+			
+	// 			colorChannelIndex++;
+	// 			colorChannelValuePosition = 0;
+			
+	// 			break;
+	// 		case 'S':
+
+	// 			isSkipMode = true;
+
+	// 			break;
+	// 		case 'C':
+
+	// 			clearCanvas(canvas);
+
+	// 			break;
+	// 		default:
+
+	// 			if (isSkipMode) {
+
+	// 				skipIndex += c;
+
+	// 				break;
+	// 			} else if (colorChannelIndex < 3) {
+
+	// 				// _pixel[colorChannelIndex] += (c - '0') * pow(10, 2 - colorChannelValuePosition);
+	// 				colorChannelValueDigits.push_back(c);
+
+	// 				colorChannelValuePosition++;
+
+	// 				if (colorChannelValuePosition == 3) {
+	// 					colorChannelValuePosition = 0;
+	// 				}
+	// 			}
+
+	// 			// Write last pixel too
+	// 			if ((i + 1) == canvasDataLength) {
+	// 				writePixelData(canvas, pixelIndex, _pixel);
+	// 				_pixel = CRGB(0, 0, 0);
+	// 			}
+	// 	}
+
+	// 	// Append read pixel and remove saved digits
+	// 	if (colorChannelValuePosition == 0) {
+	// 		for (uint8_t j = 0; j < colorChannelValueDigits.size(); j++) {
+	// 			_pixel[colorChannelIndex] += (colorChannelValueDigits.front() - '0') * pow(10, 2 - j);
+	// 			colorChannelValueDigits.pop_front();
+	// 		}
+	// 	}
+	// }
 
 }
 
