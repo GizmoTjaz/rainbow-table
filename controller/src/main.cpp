@@ -1,6 +1,9 @@
+#define CONFIG_ASYNC_TCP_EVENT_QUEUE_SIZE 512
+
 // Core
 #include <Arduino.h>
 #include <math.h>
+#include <list>
 
 // Networking
 #include <WiFi.h>
@@ -20,7 +23,7 @@ AsyncWebServer server(80);
 AsyncWebSocket ws("/ws");
 
 // Variables
-uint8_t packet[MAX_PACKET_LENGTH] = { 0 };
+std::list<char> packet;
 size_t packetLength = 0;
 bool isBusy = false;
 
@@ -59,7 +62,7 @@ void setup () {
 				}
 
 				for (size_t i = 0; i < dataLength; i++) {
-					packet[packetLength + i] = data[i];
+					packet.push_back(data[i]);
 				}
 
 				packetLength += dataLength;
@@ -67,15 +70,10 @@ void setup () {
 				if (packetLength == info->len) { // Final packet
 					
 					isBusy = true;
-					renderCanvas(canvas, packet, packetLength);
+					// renderCanvas(canvas, packet, packetLength);
 					isBusy = false;
 					
-					// Clear packet data
-					for (size_t i = 0; i < MAX_PACKET_LENGTH; i++) {
-						packet[i] = 0;
-					}
-
-					packetLength = 0;
+					packet.clear();
 				}
 
 				break;
