@@ -70,7 +70,7 @@ void setup () {
 				if (packetLength == info->len) { // Final packet
 					
 					isBusy = true;
-					// renderCanvas(canvas, packet, packetLength);
+					renderCanvas(canvas, packet, packetLength);
 					isBusy = false;
 					
 					packet.clear();
