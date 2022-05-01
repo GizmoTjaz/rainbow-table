@@ -38,7 +38,7 @@ void clearCanvas (const CRGBArray<NUM_LEDS> &canvas) {
 	}
 }
 
-void renderCanvas (const CRGBArray<NUM_LEDS> &canvas, const std::list<char> &canvasData, const size_t &canvasDataLength) {
+void renderCanvas (const CRGBArray<NUM_LEDS> &canvas, const char (&canvasData)[MAX_PACKET_LENGTH], const size_t &canvasDataLength) {
 
 	uint8_t pixelIndex = 0;
 	uint8_t colorChannelIndex = 0;
@@ -51,7 +51,9 @@ void renderCanvas (const CRGBArray<NUM_LEDS> &canvas, const std::list<char> &can
 
 	CRGB _pixel = CRGB(0, 0, 0);
 
-	for (const char &c : canvasData) {
+	for (size_t i = 0; i < canvasDataLength; i++) {
+
+		char c = canvasData[i];
 
 		// Don't allow non-existent LEDs to be called
 		if (pixelIndex >= NUM_LEDS) {
@@ -126,7 +128,7 @@ void renderCanvas (const CRGBArray<NUM_LEDS> &canvas, const std::list<char> &can
 	}
 
 	// Write last pixel too
-	if (canvasData.back() != '|') {
+	if (canvasData[canvasDataLength - 1] != '|') {
 		writePixelData(canvas, pixelIndex, _pixel);
 	}
 
