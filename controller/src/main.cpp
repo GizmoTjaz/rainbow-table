@@ -1,5 +1,3 @@
-#define CONFIG_ASYNC_TCP_EVENT_QUEUE_SIZE 512
-
 // Core
 #include <Arduino.h>
 #include <math.h>
