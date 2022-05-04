@@ -31,6 +31,8 @@ void setup () {
 	FastLED.addLeds<NEOPIXEL, MATRIX_DATA_PIN>(canvas, NUM_LEDS);
 	FastLED.setMaxPowerInVoltsAndMilliamps(5, 800);
 
+	clearCanvas(canvas);
+
 	WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
 
 	while (WiFi.status() != WL_CONNECTED) {
