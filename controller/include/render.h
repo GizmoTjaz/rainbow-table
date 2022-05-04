@@ -39,9 +39,9 @@ void clearCanvas (const CRGBArray<NUM_LEDS> &canvas) {
 }
 
 void writeColorChannelValueToPixel (CRGB &pixel, std::list<char> &colorChannelValueDigits, const uint8_t &colorChannelIndex) {
-	if (colorChannelValueDigits.size() > 0) {
-		for (uint8_t i = 0; i < 3; i++) {
-		
+	for (uint8_t i = 0; i < 3; i++) {
+		if (colorChannelValueDigits.size() > 0) {
+	
 			pixel[colorChannelIndex] += (colorChannelValueDigits.back() - '0') * pow(10, i);
 
 			colorChannelValueDigits.pop_back();
@@ -125,17 +125,15 @@ void renderCanvas (const CRGBArray<NUM_LEDS> &canvas, const char (&canvasData)[M
 					colorChannelValueDigits.push_back(c);
 
 					colorChannelValuePosition++;
-
-					if (colorChannelValuePosition == 3) {
-						writeColorChannelValueToPixel(_pixel, colorChannelValueDigits, colorChannelIndex);
-						colorChannelValuePosition = 0;
-					}
 				}
 		}
 	}
 
-	// Write last pixel too
-	if (canvasData[canvasDataLength - 1] != '|') {
+	int lastCharacterCode = int(canvasData[canvasDataLength - 1]);
+
+	// Write last pixel if it's a number
+	if (lastCharacterCode >= (int)'0' && lastCharacterCode <= (int)'9') {
+		writeColorChannelValueToPixel(_pixel, colorChannelValueDigits, colorChannelIndex);
 		writePixelData(canvas, pixelIndex, _pixel);
 	}
 
