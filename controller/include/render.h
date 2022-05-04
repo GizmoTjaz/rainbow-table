@@ -38,6 +38,17 @@ void clearCanvas (const CRGBArray<NUM_LEDS> &canvas) {
 	}
 }
 
+void writeColorChannelValueToPixel (CRGB &pixel, std::list<char> &colorChannelValueDigits, const uint8_t &colorChannelIndex) {
+	if (colorChannelValueDigits.size() > 0) {
+		for (uint8_t i = 0; i < 3; i++) {
+		
+			pixel[colorChannelIndex] += (colorChannelValueDigits.back() - '0') * pow(10, i);
+
+			colorChannelValueDigits.pop_back();
+		}
+	}
+}
+
 void renderCanvas (const CRGBArray<NUM_LEDS> &canvas, const char (&canvasData)[MAX_PACKET_LENGTH], const size_t &canvasDataLength) {
 
 	uint8_t pixelIndex = 0;
@@ -51,9 +62,7 @@ void renderCanvas (const CRGBArray<NUM_LEDS> &canvas, const char (&canvasData)[M
 
 	CRGB _pixel = CRGB(0, 0, 0);
 
-	for (size_t i = 0; i < canvasDataLength; i++) {
-
-		char c = canvasData[i];
+	for (const char &c : canvasData) {
 
 		// Don't allow non-existent LEDs to be called
 		if (pixelIndex >= NUM_LEDS) {
@@ -72,6 +81,9 @@ void renderCanvas (const CRGBArray<NUM_LEDS> &canvas, const char (&canvasData)[M
 
 				} else {
 
+					writeColorChannelValueToPixel(_pixel, colorChannelValueDigits, colorChannelIndex);
+					colorChannelValuePosition = 0;
+
 					// Write temp pixel data to real pixel
 					writePixelData(canvas, pixelIndex, _pixel);
 					_pixel = CRGB(0, 0, 0);
@@ -83,6 +95,9 @@ void renderCanvas (const CRGBArray<NUM_LEDS> &canvas, const char (&canvasData)[M
 
 				break;
 			case ',':
+
+				writeColorChannelValueToPixel(_pixel, colorChannelValueDigits, colorChannelIndex);
+				colorChannelValuePosition = 0;
 
 				colorChannelIndex++;
 
@@ -105,22 +120,12 @@ void renderCanvas (const CRGBArray<NUM_LEDS> &canvas, const char (&canvasData)[M
 
 				} else {
 
-					colorChannelValuePosition++;
-				
 					colorChannelValueDigits.push_back(c);
 
+					colorChannelValuePosition++;
+
 					if (colorChannelValuePosition == 3) {
-
-						// Write color channel digits into one color channel value
-						for (uint8_t j = 0; j < 3; j++) {
-							if (colorChannelValueDigits.size() > 0) {
-
-								_pixel[colorChannelIndex] += (colorChannelValueDigits.back() - '0') * pow(10, j);
-
-								colorChannelValueDigits.pop_back();
-							}
-						}
-
+						writeColorChannelValueToPixel(_pixel, colorChannelValueDigits, colorChannelIndex);
 						colorChannelValuePosition = 0;
 					}
 				}
@@ -131,89 +136,6 @@ void renderCanvas (const CRGBArray<NUM_LEDS> &canvas, const char (&canvasData)[M
 	if (canvasData[canvasDataLength - 1] != '|') {
 		writePixelData(canvas, pixelIndex, _pixel);
 	}
-
-	// for (size_t i = 0; i < canvasDataLength; i++) {
-
-	// 	// Don't allow non-existent LEDs to be called
-	// 	if (pixelIndex >= NUM_LEDS) {
-	// 		break;
-	// 	}
-
-	// 	char c = canvasData[i];
-
-	// 	switch (c) {
-	// 		case '|':
-
-	// 			if (isSkipMode) {
-
-	// 				pixelIndex = std::atoi(skipIndex.c_str());
-
-	// 				skipIndex = "";
-	// 				isSkipMode = false;
-
-	// 				break;
-	// 			}
-
-	// 			colorChannelIndex = 0;
-	// 			colorChannelValuePosition = 0;
-
-	// 			// Write temp pixel data to real pixel
-	// 			writePixelData(canvas, pixelIndex, _pixel);
-	// 			_pixel = CRGB(0, 0, 0);
-
-	// 			pixelIndex++;
-
-	// 			break;
-	// 		case ',':
-			
-	// 			colorChannelIndex++;
-	// 			colorChannelValuePosition = 0;
-			
-	// 			break;
-	// 		case 'S':
-
-	// 			isSkipMode = true;
-
-	// 			break;
-	// 		case 'C':
-
-	// 			clearCanvas(canvas);
-
-	// 			break;
-	// 		default:
-
-	// 			if (isSkipMode) {
-
-	// 				skipIndex += c;
-
-	// 				break;
-	// 			} else if (colorChannelIndex < 3) {
-
-	// 				// _pixel[colorChannelIndex] += (c - '0') * pow(10, 2 - colorChannelValuePosition);
-	// 				colorChannelValueDigits.push_back(c);
-
-	// 				colorChannelValuePosition++;
-
-	// 				if (colorChannelValuePosition == 3) {
-	// 					colorChannelValuePosition = 0;
-	// 				}
-	// 			}
-
-	// 			// Write last pixel too
-	// 			if ((i + 1) == canvasDataLength) {
-	// 				writePixelData(canvas, pixelIndex, _pixel);
-	// 				_pixel = CRGB(0, 0, 0);
-	// 			}
-	// 	}
-
-	// 	// Append read pixel and remove saved digits
-	// 	if (colorChannelValuePosition == 0) {
-	// 		for (uint8_t j = 0; j < colorChannelValueDigits.size(); j++) {
-	// 			_pixel[colorChannelIndex] += (colorChannelValueDigits.front() - '0') * pow(10, 2 - j);
-	// 			colorChannelValueDigits.pop_front();
-	// 		}
-	// 	}
-	// }
 
 }
 
