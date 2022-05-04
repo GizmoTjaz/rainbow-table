@@ -62,7 +62,9 @@ void renderCanvas (const CRGBArray<NUM_LEDS> &canvas, const char (&canvasData)[M
 
 	CRGB _pixel = CRGB(0, 0, 0);
 
-	for (const char &c : canvasData) {
+	for (size_t i = 0; i < canvasDataLength; i++) {
+
+		const char c = canvasData[i];
 
 		// Don't allow non-existent LEDs to be called
 		if (pixelIndex >= NUM_LEDS) {
