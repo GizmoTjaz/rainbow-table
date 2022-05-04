@@ -1,10 +1,8 @@
 // Core
 #include <Arduino.h>
 #include <math.h>
-#include <list>
 
 // Networking
-#include <WiFi.h>
 #include <AsyncTCP.h>
 #include <ESPAsyncWebServer.h>
 
@@ -21,9 +19,10 @@ AsyncWebServer server(80);
 AsyncWebSocket ws("/ws");
 
 // Variables
-std::list<char> packet;
+char packet[MAX_PACKET_LENGTH] = {};
 size_t packetLength = 0;
-bool isBusy = false;
+
+bool isBusyRendering = false;
 
 void setup () {
 
@@ -55,23 +54,33 @@ void setup () {
 				break;
 			case WS_EVT_DATA:
 
-				if (isBusy) {
+				if (isBusyRendering) {
 					return;
 				}
 
-				for (size_t i = 0; i < dataLength; i++) {
-					packet.push_back(data[i]);
+				if (info->len > MAX_PACKET_LENGTH) {
+					client->text("Packet too long.");
+					return;
 				}
 
+				if ((packetLength + dataLength) > MAX_PACKET_LENGTH) {
+					client->text("Partial packet exceeds packet length.");
+					return;
+				}
+
+				memcpy(packet + packetLength, data, dataLength);
 				packetLength += dataLength;
 
-				if (packetLength == info->len) { // Final packet
-					
-					isBusy = true;
+				if (packetLength == info->len) {
+
+					isBusyRendering = true;
+
 					renderCanvas(canvas, packet, packetLength);
-					isBusy = false;
-					
-					packet.clear();
+
+					memset(packet, 0, sizeof packet);
+					packetLength = 0;
+
+					isBusyRendering = false;
 				}
 
 				break;
@@ -98,9 +107,10 @@ void setup () {
 
 void loop () {
 
-	if (!isBusy) {
+	if (!isBusyRendering) {
 		FastLED.setBrightness(10);
 		FastLED.show();
 	}
 
+	ws.cleanupClients();
 }
