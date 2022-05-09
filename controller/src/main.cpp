@@ -52,7 +52,19 @@ void setup () {
 
 		IPAddress ipAddress = WiFi.softAPIP();
 
-		Serial.print("Server IP Address: ");
+		WiFi.onEvent([](WiFiEvent_t event, WiFiEventInfo_t info) {
+			switch (event) {
+				case ARDUINO_EVENT_WIFI_AP_STACONNECTED:
+					Serial.print("\nClient connected: " + info.ip);
+					break;
+				case ARDUINO_EVENT_WIFI_AP_STADISCONNECTED:
+					Serial.print("\nClient disconnected: " + info.ip);
+					break;
+				default:
+			}
+		});
+
+		Serial.print("Server IP address: ");
 		Serial.println(ipAddress);
 
 	} else {
@@ -64,7 +76,7 @@ void setup () {
 			Serial.print(".");
 		}
 
-		Serial.print("\nLocal IP Address: ");
+		Serial.print("\nLocal IP address: ");
 		Serial.println(WiFi.localIP());
 	}
 
