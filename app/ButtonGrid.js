@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 
 // Components
-import { StyleSheet, Dimensions } from "react-native";
+import { StyleSheet, Dimensions, View } from "react-native";
 import { Gesture, GestureDetector, State } from "react-native-gesture-handler";
 import Grid from "react-native-grid-component";
 
@@ -56,8 +56,8 @@ export default function ButtonGrid (props) {
 			off = { r: 0, g: 0, b: 0 };
 
 		let
-			pixel = pixelMap[pixelID],
-			pixelTotal = pixel.r + pixel.g + pixel.b;
+			pixel = pixelMap[currentPixelID],
+			pixelTotal = (pixel?.r + pixel?.g + pixel?.b) | 0;
 
 		if (pixelTotal === 0) {
 			pixel = on;
@@ -65,12 +65,12 @@ export default function ButtonGrid (props) {
 			pixel = null;
 		}
 
-		pixelMap[pixelID] = pixel;
+		pixelMap[currentPixelID] = pixel;
 
 		if (pixel === null) {
-			props.sendRawFrame(`S${currentPixelID}|0,0,0`);
+			props.paintRawFrame(`S${currentPixelID}|0,0,0`);
 		} else {
-			props.sendRawFrame(`S${currentPixelID}|${pixel.r},${pixel.g},${pixel.b}`);
+			props.paintRawFrame(`S${currentPixelID}|${pixel.r},${pixel.g},${pixel.b}`);
 		}
 
 	}, [ currentPixelID ] );
@@ -96,15 +96,6 @@ export default function ButtonGrid (props) {
 }
 
 const styles = StyleSheet.create({
-	container: {
-		width: "100%",
-		paddingBottom: "100%",
-		display: "flex",
-		flexDirection: "row",
-		flexWrap: "wrap",
-		justifyContent: "space-around",
-		backgroundColor: "#fff"
-	},
 	grid: {
 		flex: 1
 	},
