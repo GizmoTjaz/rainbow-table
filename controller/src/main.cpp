@@ -47,7 +47,8 @@ void connectToWiFiNetwork () {
 		Serial.print(".");
 	}
 
-	Serial.printf("\nLocal IP address: %s\n", WiFi.localIP());
+	Serial.print("\nLocal IP address: ");
+	Serial.println(WiFi.localIP());
 }
 
 void setup () {
@@ -62,14 +63,20 @@ void setup () {
 	WiFi.onEvent([](WiFiEvent_t event, WiFiEventInfo_t info) {
 		switch (event) {
 			case SYSTEM_EVENT_AP_STACONNECTED:
-				Serial.printf("Client connected: %s", info.got_ip.ip_info.ip.addr);
+				
+				Serial.print("Client connected: ");
+				Serial.println(info.got_ip.ip_info.ip.addr);
+				
 				break;
 			case SYSTEM_EVENT_AP_STADISCONNECTED:
-				Serial.printf("Client disconnected: %s", info.got_ip.ip_info.ip.addr);
+				
+				Serial.print("Client disconnected: ");
+				Serial.println(info.got_ip.ip_info.ip.addr);
+
 				break;
 			case SYSTEM_EVENT_STA_DISCONNECTED:
 
-				Serial.printf("Disconnected from Wi-Fi network. Attempting to reconnect...\n");
+				Serial.println("Disconnected from Wi-Fi network. Attempting to reconnect...");
 				connectToWiFiNetwork();
 
 			default:
@@ -81,7 +88,8 @@ void setup () {
 
 		WiFi.softAP(WIFI_SSID, WIFI_PASSWORD);
 
-		Serial.printf("Server IP address: %s\n", WiFi.softAPIP());
+		Serial.print("Server IP address: ");
+		Serial.println(WiFi.softAPIP());
 
 	} else {
 		connectToWiFiNetwork();
