@@ -38,6 +38,18 @@ size_t packetLength = 0;
 
 bool isBusyRendering = false;
 
+void connectToWiFiNetwork () {
+
+	WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+
+	while (WiFi.status() != WL_CONNECTED) {
+		delay(500);
+		Serial.print(".");
+	}
+
+	Serial.printf("\nLocal IP address: %s\n", WiFi.localIP());
+}
+
 void setup () {
 
 	Serial.begin(9600);
@@ -47,35 +59,32 @@ void setup () {
 
 	clearCanvas(canvas);
 
+	WiFi.onEvent([](WiFiEvent_t event, WiFiEventInfo_t info) {
+		switch (event) {
+			case SYSTEM_EVENT_AP_STACONNECTED:
+				Serial.printf("Client connected: %s", info.got_ip.ip_info.ip.addr);
+				break;
+			case SYSTEM_EVENT_AP_STADISCONNECTED:
+				Serial.printf("Client disconnected: %s", info.got_ip.ip_info.ip.addr);
+				break;
+			case SYSTEM_EVENT_STA_DISCONNECTED:
+
+				Serial.printf("Disconnected from Wi-Fi network. Attempting to reconnect...\n");
+				connectToWiFiNetwork();
+
+			default:
+				break;
+		}
+	});
+
 	if (SERVER_MODE) {
 
 		WiFi.softAP(WIFI_SSID, WIFI_PASSWORD);
 
-		WiFi.onEvent([](WiFiEvent_t event, WiFiEventInfo_t info) {
-			switch (event) {
-				case SYSTEM_EVENT_AP_STACONNECTED:
-					Serial.printf("Client connected: %s", info.got_ip.ip_info.ip.addr);
-					break;
-				case SYSTEM_EVENT_AP_STADISCONNECTED:
-					Serial.printf("Client disconnected: %s", info.got_ip.ip_info.ip.addr);
-					break;
-				default:
-					break;
-			}
-		});
-
 		Serial.printf("Server IP address: %s\n", WiFi.softAPIP());
 
 	} else {
-
-		WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
-
-		while (WiFi.status() != WL_CONNECTED) {
-			delay(500);
-			Serial.print(".");
-		}
-
-		Serial.printf("\nLocal IP address: %s\n", WiFi.localIP());
+		connectToWiFiNetwork();
 	}
 
 	ws.onEvent([](AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t dataLength) {
