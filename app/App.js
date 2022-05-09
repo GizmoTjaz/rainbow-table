@@ -78,7 +78,7 @@ export default class App extends React.Component {
 						/>
 						{
 							this.state.isReady
-								? <ButtonGrid style={styles.grid} onData={ data => this.paintFrame(data) } sendDirectly={ data => this.ws.send(data) } />
+								? <ButtonGrid style={styles.grid} paintFrame={ data => this.paintFrame(data) } paintRawFrame={ data => this.ws.send(data) } />
 								: <Text>Connecting...</Text> 
 						}
 					</SafeAreaView>
