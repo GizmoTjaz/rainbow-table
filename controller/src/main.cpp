@@ -51,22 +51,20 @@ void setup () {
 
 		WiFi.softAP(WIFI_SSID, WIFI_PASSWORD);
 
-		IPAddress ipAddress = WiFi.softAPIP();
-
 		WiFi.onEvent([](WiFiEvent_t event, WiFiEventInfo_t info) {
 			switch (event) {
 				case SYSTEM_EVENT_AP_STACONNECTED:
-					Serial.println("Client connected: " + info.got_ip.ip_info.ip.addr);
+					Serial.printf("Client connected: %s", info.got_ip.ip_info.ip.addr);
 					break;
 				case SYSTEM_EVENT_AP_STADISCONNECTED:
-					Serial.println("Client disconnected: " + info.got_ip.ip_info.ip.addr);
+					Serial.printf("Client disconnected: %s", info.got_ip.ip_info.ip.addr);
 					break;
 				default:
 					break;
 			}
 		});
 
-		Serial.println("Server IP address: " + ipAddress);
+		Serial.printf("Server IP address: %s\n", WiFi.softAPIP());
 
 	} else {
 
@@ -77,7 +75,7 @@ void setup () {
 			Serial.print(".");
 		}
 
-		Serial.println("\nLocal IP address: " + WiFi.localIP());
+		Serial.printf("\nLocal IP address: %s\n", WiFi.localIP());
 	}
 
 	ws.onEvent([](AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t dataLength) {
