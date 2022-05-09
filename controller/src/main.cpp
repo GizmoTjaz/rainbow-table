@@ -1,3 +1,17 @@
+#include "env.h"
+
+#ifndef SERVER_MODE
+#define SERVER_MODE true
+#endif
+
+#ifndef WIFI_SSID
+#define WIFI_SSID "Rainbow Table"
+#endif
+
+#ifndef WIFI_PASSWORD
+#define WIFI_PASSWORD "rainbowtable12345"
+#endif
+
 // Core
 #include <Arduino.h>
 #include <math.h>
@@ -10,7 +24,6 @@
 #include <FastLED.h>
 
 // Utils
-#include "env.h"
 #include "render.h"
 
 // Structs
@@ -33,15 +46,27 @@ void setup () {
 
 	clearCanvas(canvas);
 
-	WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+	if (SERVER_MODE) {
 
-	while (WiFi.status() != WL_CONNECTED) {
-		delay(500);
-		Serial.print(".");
+		WiFi.softAP(WIFI_SSID, WIFI_PASSWORD);
+
+		IPAddress ipAddress = WiFi.softAPIP();
+
+		Serial.print("Server IP Address: ");
+		Serial.println(ipAddress);
+
+	} else {
+
+		WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+
+		while (WiFi.status() != WL_CONNECTED) {
+			delay(500);
+			Serial.print(".");
+		}
+
+		Serial.print("\nLocal IP Address: ");
+		Serial.println(WiFi.localIP());
 	}
-
-	Serial.println("");
-	Serial.println(WiFi.localIP());
 
 	ws.onEvent([](AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t dataLength) {
 
@@ -102,8 +127,10 @@ void setup () {
 		}
 	});
 
+	// Fix CORS preflight errors
 	DefaultHeaders::Instance().addHeader("Access-Control-Allow-Origin", "*");
 	DefaultHeaders::Instance().addHeader("Access-Control-Allow-Headers", "*");
+
 	server.begin();
 }
 
