@@ -70,14 +70,18 @@ export default class App extends React.Component {
 				<StatusBar style="light" />
 				<View style={styles.background}>
 					<SafeAreaView style={styles.container}>
-						<Button
-							title="Clear"
-							color="#a31ffc"
-							onPress={ () => this.clearFrame() }
-						/>
 						{
 							this.state.isReady
-								? <ButtonGrid style={styles.grid} paintFrame={ data => this.paintFrame(data) } paintRawFrame={ data => this.ws.send(data) } />
+								? (
+									<Fragment>
+										<Button
+											title="Clear"
+											color="#a31ffc"
+											onPress={ () => this.clearFrame() }
+										/>
+										<ButtonGrid style={styles.grid} paintFrame={ data => this.paintFrame(data) } paintRawFrame={ data => this.ws.send(data) } />
+									</Fragment>
+								)
 								: <ActivityIndicator size="large" color="#fff" />
 						}
 					</SafeAreaView>
