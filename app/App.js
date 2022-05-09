@@ -66,42 +66,32 @@ export default class App extends React.Component {
 
 	render () {
 		return (
-			<Fragment>
+			<SafeAreaView style={styles.container}>
 				<StatusBar style="light" />
-				<View style={styles.background}>
-					<SafeAreaView style={styles.container}>
-						{
-							this.state.isReady
-								? (
-									<Fragment>
-										<Button
-											title="Clear"
-											color="#a31ffc"
-											onPress={ () => this.clearFrame() }
-										/>
-										<ButtonGrid style={styles.grid} paintFrame={ data => this.paintFrame(data) } paintRawFrame={ data => this.ws.send(data) } />
-									</Fragment>
-								)
-								: <ActivityIndicator size="large" color="#fff" />
-						}
-					</SafeAreaView>
-				</View>
-			</Fragment>
+				{
+					this.state.isReady
+						? (
+							<View style={styles.container}>
+								<Button
+									title="Clear"
+									color="#a31ffc"
+									onPress={ () => this.clearFrame() }
+								/>
+								<ButtonGrid style={styles.grid} paintFrame={ data => this.paintFrame(data) } paintRawFrame={ data => this.ws.send(data) } />
+							</View>
+						)
+						: <ActivityIndicator size="large" color="#fff" />
+				}
+			</SafeAreaView>
 		);
 	}
 }
 
 const styles = StyleSheet.create({
-	background: {
-		position: "absolute",
-		width: "100%",
-		height: "100%",
-		top: 0,
-		left: 0,
-		backgroundColor: "#222"
-	},
 	container: {
-		flex: 1
+		flex: 1,
+		display: "flex",
+		flexDirection: "column",
 	},
 	grid: {
 		flex: 1
