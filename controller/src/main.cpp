@@ -64,14 +64,14 @@ void setup () {
 		switch (event) {
 			case SYSTEM_EVENT_AP_STACONNECTED:
 				
-				Serial.print("Client connected: ");
-				Serial.println(info.got_ip.ip_info.ip.addr);
+				// Serial.print("Client connected: ");
+				// Serial.println(info.got_ip.ip_info.ip.addr);
 				
 				break;
 			case SYSTEM_EVENT_AP_STADISCONNECTED:
 				
-				Serial.print("Client disconnected: ");
-				Serial.println(info.got_ip.ip_info.ip.addr);
+				// Serial.print("Client disconnected: ");
+				// Serial.println(info.got_ip.ip_info.ip.addr);
 
 				break;
 			case SYSTEM_EVENT_STA_DISCONNECTED:
