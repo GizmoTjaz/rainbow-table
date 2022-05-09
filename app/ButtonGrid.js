@@ -1,28 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Text, View, TouchableOpacity, StyleSheet, Touchable, Dimensions, FlatList } from "react-native";
 import { Gesture, GestureDetector, PanGestureHandler, State } from "react-native-gesture-handler";
-
-const GridButton = ({ index, active }) => {
-	return (
-		<View
-			style={[
-				styles.button,
-				active
-					? styles.activeButton 
-					: styles.inactiveButton
-			]}
-		>
-			<Text style={styles.buttonLabel}>{ index }</Text>
-		</View>
-	);
-};
-
-export default function Grid (props) {
+import Grid from "react-native-grid-component";
+export default function ButtonGrid (props) {
 
 	const
 		[ currentButtonID, setCurrentButtonID ] = useState(-1),
 		[ buttonIDs, _ ] = useState(Array(16*16).fill(0)),
-		[ activeButtonIDs, setActiveButtonIDs ] = useState([]);
+		[ activeButtonIDs, setActiveButtonIDs ] = useState([]),
+		[ buttonHeight, __ ] = useState(Dimensions.get("window").width / 16);
 
 	function handleTouch (e) {
 
@@ -32,7 +18,7 @@ export default function Grid (props) {
 
 		const
 			{ x, y } = e,
-			buttonWidth = Dimensions.get("window").width / 16,
+			buttonWidth = buttonHeight,
 			buttonIndex = (Math.floor(y / buttonWidth) * 16) + Math.floor(x / buttonWidth);
 
 		if (buttonIndex >= 0 && buttonIndex < 16*16) {
@@ -54,36 +40,20 @@ export default function Grid (props) {
 			props.sendDirectly(`S${currentButtonID}|255,255,255`);
 		}
 
-	}, [currentButtonID] );
+	}, [ currentButtonID ] );
 
 	const gestureHandler = Gesture.Pan().minDistance(0).maxPointers(1).shouldCancelWhenOutside(false).onStart(handleTouch).onUpdate(handleTouch);
 
 	return (
 		<GestureDetector gesture={gestureHandler}>
-			{ <View style={styles.container}>
-				{/* {
-					buttonIDs.map((_, index) => (
-						<View
-							key={index}
-							style={[
-								styles.button,
-								activeButtonIDs.includes(index)
-									? styles.activeButton 
-									: styles.inactiveButton
-							]} 
-						/>
-					))
-				} */}
-			</View> }
-			{/* <FlatList
+			<Grid
+				style={styles.grid}
+				renderItem={({ item, index }) => (
+					<GridButton key={index} index={index} active={activeButtonIDs.includes(index)} style={{ height: buttonHeight }} />
+				)}
 				data={buttonIDs}
 				numColumns={16}
-				renderItem={({ _, index }) => (
-					<GridButton index={index} active={activeButtonIDs.includes(index)} />
-				)}
-				keyExtractor={(_, index) => index.toString()}
-				style={styles.list}
-			/> */}
+			/>
 		</GestureDetector>
 	);
 }
@@ -104,15 +74,13 @@ const styles = StyleSheet.create({
 	},
 	button: {
 		flex: 1,
-		flexBasis: "6.25%",
-		borderColor: "red",
-		borderWidth: 1
+		margin: 1
 	},
 	activeButton: {
 		backgroundColor: "#fff"
 	},
 	inactiveButton: {
-		//backgroundColor: "#ff0000"
+		backgroundColor: "#ff0000"
 	},
 	buttonLabel: {
 		color: "transparent"
