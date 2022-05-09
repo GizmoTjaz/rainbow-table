@@ -3,7 +3,7 @@ import { StatusBar } from "expo-status-bar";
 import { Button, SafeAreaView, StyleSheet, Text, View } from "react-native";
 
 import Buttons from "./Buttons";
-import Grid from "./Grid";
+import ButtonGrid from "./ButtonGrid";
 
 export default class App extends React.Component {
 
@@ -16,7 +16,7 @@ export default class App extends React.Component {
 			activeIndexes: []
 		}
 
-		this.ws = new WebSocket("ws://192.168.64.109/ws");
+		this.ws = new WebSocket("ws://192.168.4.1/ws");
 	}
 
 	// addPixel (pixelIndex) {
@@ -114,7 +114,7 @@ export default class App extends React.Component {
 						/>
 						{ !this.state.isReady && <Text>Connecting...</Text> }
 						{ /*this.state.isReady && <Buttons style={styles.grid} onActivateButton={ (buttonIndex) => this.sendButton(buttonIndex) } />*/ }
-						{ this.state.isReady && <Grid style={styles.grid} onData={ data => this.paintFrame(data) } sendDirectly={ data => this.ws.send(data) } /> }
+						{ this.state.isReady && <ButtonGrid style={styles.grid} onData={ data => this.paintFrame(data) } sendDirectly={ data => this.ws.send(data) } /> }
 					</SafeAreaView>
 				</View>
 			</Fragment>
