@@ -17,7 +17,8 @@
     "react-native": "0.68.1",
     "react-native-gesture-handler": "~2.2.0",
     "react-native-grid-component": "^2.0.1",
-    "react-native-web": "0.17.7"
+    "react-native-web": "0.17.7",
+    "expo-updates": "~0.13.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"
