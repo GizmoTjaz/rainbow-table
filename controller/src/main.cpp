@@ -17,6 +17,7 @@
 #include <math.h>
 
 // Networking
+#include <WiFi.h>
 #include <AsyncTCP.h>
 #include <ESPAsyncWebServer.h>
 
@@ -40,7 +41,7 @@ bool isBusyRendering = false;
 void setup () {
 
 	Serial.begin(9600);
-	
+
 	FastLED.addLeds<NEOPIXEL, MATRIX_DATA_PIN>(canvas, NUM_LEDS);
 	FastLED.setMaxPowerInVoltsAndMilliamps(5, 800);
 
@@ -54,13 +55,14 @@ void setup () {
 
 		WiFi.onEvent([](WiFiEvent_t event, WiFiEventInfo_t info) {
 			switch (event) {
-				case ARDUINO_EVENT_WIFI_AP_STACONNECTED:
-					Serial.println("Client connected: " + info.ip);
+				case SYSTEM_EVENT_AP_STACONNECTED:
+					Serial.println("Client connected: " + info.got_ip.ip_info.ip.addr);
 					break;
-				case ARDUINO_EVENT_WIFI_AP_STADISCONNECTED:
-					Serial.println("Client disconnected: " + info.ip);
+				case SYSTEM_EVENT_AP_STADISCONNECTED:
+					Serial.println("Client disconnected: " + info.got_ip.ip_info.ip.addr);
 					break;
 				default:
+					break;
 			}
 		});
 
