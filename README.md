@@ -2,6 +2,7 @@
 `/controller/include/env.h`
 ```
 // Wi-Fi
+#define SERVER_MODE false // Defaults to true, will set up a Wi-Fi network of its own
 #define WIFI_SSID "WI-FI NETWORK NAME"
 #define WIFI_PASSWORD "WI-FI NETWORK PASSWORD"
 
