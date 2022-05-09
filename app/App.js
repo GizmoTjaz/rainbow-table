@@ -19,7 +19,7 @@ export default class App extends React.Component {
 			isReady: false
 		}
 
-		this.ws = new WebSocket("ws://192.168.4.1/ws");
+		this.ws = new WebSocket("ws://192.168.64.109/ws");
 	}
 
 	paintFrame (pixelMap) {
@@ -101,12 +101,9 @@ const styles = StyleSheet.create({
 		backgroundColor: "#222"
 	},
 	container: {
-		flex: 1,
-		alignItems: "center",
-		justifyContent: "center",
+		flex: 1
 	},
 	grid: {
-		width: "100%",
-		height: "100%"
+		flex: 1
 	}
 });
