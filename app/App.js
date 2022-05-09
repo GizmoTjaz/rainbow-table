@@ -1,8 +1,12 @@
-import React, { Fragment, useState } from "react";
-import { StatusBar } from "expo-status-bar";
-import { Button, SafeAreaView, StyleSheet, Text, View } from "react-native";
+// Modules
+import React from "react";
 
-import Buttons from "./Buttons";
+// Components
+import { Fragment } from "react";
+import { Button, SafeAreaView, StyleSheet, Text, View, ActivityIndicator } from "react-native";
+import { StatusBar } from "expo-status-bar";
+
+// Local Components
 import ButtonGrid from "./ButtonGrid";
 
 export default class App extends React.Component {
@@ -12,49 +16,26 @@ export default class App extends React.Component {
 		super(props);
 
 		this.state = {
-			isReady: false,
-			activeIndexes: []
+			isReady: false
 		}
 
 		this.ws = new WebSocket("ws://192.168.4.1/ws");
 	}
 
-	// addPixel (pixelIndex) {
-	// 	if (!this.state.activeIndexes.includes(pixelIndex)) {
+	paintFrame (activePixels) {
 
-	// 		this.setState({
-	// 			activeIndexes: [ ...this.state.activeIndexes, pixelIndex ]
-	// 		});
-
-	// 		//this.ws.send(`S${pixelIndex}|255,255,255`);
-	// 	}
-	// }
-
-	// removePixel (pixelIndex) {
-
-	// 	this.setState({
-	// 		activeIndexes: this.state.activeIndexes.filter(index => index !== pixelIndex)
-	// 	});
-
-	// 	//this.ws.send(`S${pixelIndex}|0,0,0`);
-	// }
-
-	paintFrame (activeIndexes) {
-
-		if (activeIndexes.length === 0) {
+		if (activePixels.length === 0) {
 			this.clearFrame();
 			return;
 		}
 		
 		let _frame = new Array(16*16).fill("0,0,0|");
 
-		activeIndexes.forEach(pixelIndex => {
-			_frame[pixelIndex] = "255,255,255|";
+		activePixels.forEach(pixel => {
+			_frame[pixel.index] = `${pixel.r},${pixel.g},${pixel.b}|`;
 		});
 
 		_frame = _frame.join("").slice(0, -1);
-
-		//console.log(this.state.activeIndexes);
 
 		this.ws.send(_frame);
 	}
@@ -72,8 +53,6 @@ export default class App extends React.Component {
 			this.setState({
 				isReady: true
 			});
-
-			//this.paintFrame();
 		};
 
 		this.ws.onerror = (e) => {
@@ -81,25 +60,10 @@ export default class App extends React.Component {
 		}
 
 		this.ws.onclose = (e) => {
-			console.log(e.code, e.reason);
+			console.error(`${e.code} - ${e.reason}`);
 		}
 
 	}
-
-	// componentDidUpdate () {
-	// 	this.paintFrame();
-	// }
-
-	// sendButton (buttonIndex) {
-		
-	// 	if (this.state.activeIndexes.includes(buttonIndex)) {
-	// 		this.removePixel(buttonIndex);
-	// 	} else {
-	// 		this.addPixel(buttonIndex);
-	// 	}
-
-	// 	this.paintFrame();		
-	// }
 
 	render () {
 		return (
@@ -112,9 +76,11 @@ export default class App extends React.Component {
 							color="#a31ffc"
 							onPress={ () => this.clearFrame() }
 						/>
-						{ !this.state.isReady && <Text>Connecting...</Text> }
-						{ /*this.state.isReady && <Buttons style={styles.grid} onActivateButton={ (buttonIndex) => this.sendButton(buttonIndex) } />*/ }
-						{ this.state.isReady && <ButtonGrid style={styles.grid} onData={ data => this.paintFrame(data) } sendDirectly={ data => this.ws.send(data) } /> }
+						{
+							this.state.isReady
+								? <ButtonGrid style={styles.grid} onData={ data => this.paintFrame(data) } sendDirectly={ data => this.ws.send(data) } />
+								: <Text>Connecting...</Text> 
+						}
 					</SafeAreaView>
 				</View>
 			</Fragment>
