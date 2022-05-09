@@ -40,7 +40,7 @@ bool isBusyRendering = false;
 void setup () {
 
 	Serial.begin(9600);
-  
+	
 	FastLED.addLeds<NEOPIXEL, MATRIX_DATA_PIN>(canvas, NUM_LEDS);
 	FastLED.setMaxPowerInVoltsAndMilliamps(5, 800);
 
