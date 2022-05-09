@@ -22,17 +22,16 @@ export default class App extends React.Component {
 		this.ws = new WebSocket("ws://192.168.4.1/ws");
 	}
 
-	paintFrame (activePixels) {
-
-		if (activePixels.length === 0) {
-			this.clearFrame();
-			return;
-		}
+	paintFrame (pixelMap) {
 		
-		let _frame = new Array(16*16).fill("0,0,0|");
+		let _frame = new Array(16*16);
 
-		activePixels.forEach(pixel => {
-			_frame[pixel.index] = `${pixel.r},${pixel.g},${pixel.b}|`;
+		pixelMap.forEach((pixel, index) => {
+			if (pixel === null) {
+				_frame[index] = "0,0,0|";
+			} else {
+				_frame[index] = `${pixel.r},${pixel.g},${pixel.b}|`;
+			}
 		});
 
 		_frame = _frame.join("").slice(0, -1);
@@ -79,7 +78,7 @@ export default class App extends React.Component {
 						{
 							this.state.isReady
 								? <ButtonGrid style={styles.grid} paintFrame={ data => this.paintFrame(data) } paintRawFrame={ data => this.ws.send(data) } />
-								: <Text>Connecting...</Text> 
+								: <ActivityIndicator size="large" color="#fff" />
 						}
 					</SafeAreaView>
 				</View>
