@@ -16,7 +16,8 @@ export default class App extends React.Component {
 		super(props);
 
 		this.state = {
-			isReady: false
+			isReady: false,
+			clearSignal: 0
 		}
 
 		this.ws = new WebSocket("ws://192.168.64.109/ws");
@@ -46,6 +47,11 @@ export default class App extends React.Component {
 	}
 
 	clearFrame () {
+		
+		this.setState(({
+			clearSignal: this.state.clearSignal + 1
+		}));
+
 		this.sendData("C");
 	}
 
@@ -95,6 +101,7 @@ export default class App extends React.Component {
 											</TouchableOpacity>
 										</View>
 										<ButtonGrid
+											clearSignal={this.state.clearSignal}
 											style={styles.grid}
 											paintFrame={ data => this.paintFrame(data) }
 											paintRawFrame={ data => this.sendData(data) }

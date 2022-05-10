@@ -80,6 +80,10 @@ export default function ButtonGrid (props) {
 
 	}, [ currentPixelID ] );
 
+	useEffect(() => {
+		setPixelMap(new Array(16*16).fill({ r: 0, g: 0, b: 0 }));
+	}, [ props.clearSignal ]);
+
 	const gestureHandler = Gesture.Pan()
 		.minDistance(0)
 		.maxPointers(1)
