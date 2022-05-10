@@ -3,7 +3,7 @@ import React from "react";
 
 // Components
 import { Fragment } from "react";
-import { Button, SafeAreaView, StyleSheet, View, ActivityIndicator, Text } from "react-native";
+import { Button, SafeAreaView, StyleSheet, View, ActivityIndicator, Text, TouchableOpacity } from "react-native";
 import { StatusBar } from "expo-status-bar";
 
 // Local Components
@@ -85,11 +85,15 @@ export default class App extends React.Component {
 							this.state.isReady
 								? (
 									<Fragment>
-										<Button
-											title="Clear"
-											color="#a31ffc"
-											onPress={ () => this.clearFrame() }
-										/>
+										<View style={styles.buttonRow}>
+											<TouchableOpacity style={styles.button}>
+												<Button
+													title="Clear"
+													color="#fff"
+													onPress={ () => this.clearFrame() }
+												/>
+											</TouchableOpacity>
+										</View>
 										<ButtonGrid
 											style={styles.grid}
 											paintFrame={ data => this.paintFrame(data) }
@@ -107,6 +111,16 @@ export default class App extends React.Component {
 }
 
 const styles = StyleSheet.create({
+
+	button: {
+		backgroundColor: "#a31ffc",
+		borderRadius: 15,
+		alignSelf: "center",
+		paddingTop: 3,
+		paddingBottom: 3,
+		paddingLeft: 10,
+		paddingRight: 10
+	},
 
 	container: {
 		flex: 1,
@@ -149,5 +163,10 @@ const styles = StyleSheet.create({
 	},
 	grid: {
 		flex: 1
+	},
+
+	buttonRow: {
+		marginTop: 15,
+		marginBottom: 15
 	}
 });
