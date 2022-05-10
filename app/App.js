@@ -20,7 +20,7 @@ export default class App extends React.Component {
 			clearSignal: 0
 		}
 
-		this.ws = new WebSocket("ws://192.168.64.109/ws");
+		this.ws = new WebSocket("ws://192.168.64.4/ws");
 	}
 
 	sendData (data) {
