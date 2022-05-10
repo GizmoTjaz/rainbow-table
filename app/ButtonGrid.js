@@ -65,7 +65,13 @@ export default function ButtonGrid (props) {
 			pixel = null;
 		}
 
-		pixelMap[currentPixelID] = pixel;
+		setPixelMap(pixelMap.map((_pixel, index) => {
+			if (index === currentPixelID) {
+				return pixel;
+			} else {
+				return _pixel;
+			}
+		}));
 
 		if (pixel === null) {
 			props.paintRawFrame(`S${currentPixelID}|0,0,0`);
@@ -75,7 +81,12 @@ export default function ButtonGrid (props) {
 
 	}, [ currentPixelID ] );
 
-	const gestureHandler = Gesture.Pan().minDistance(0).maxPointers(1).shouldCancelWhenOutside(false).onStart(handleTouch).onUpdate(handleTouch);
+	const gestureHandler = Gesture.Pan()
+		.minDistance(0)
+		.maxPointers(1)
+		.shouldCancelWhenOutside(false)
+		.onStart(handleTouch)
+		.onUpdate(handleTouch);
 
 	return (
 		<GestureDetector gesture={gestureHandler}>
