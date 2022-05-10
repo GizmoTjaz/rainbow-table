@@ -11,8 +11,13 @@ function GridButton (props) {
 		<View
 			style={[
 				styles.button,
-				props.active ? styles.activeButton : styles.inactiveButton,
-				{ height: props.height }
+				props.active
+					? styles.activeButton
+					: styles.inactiveButton,
+				{
+					height: props.height,
+					backgroundColor: props.color
+				}
 			]}
 		/>
 	);
@@ -22,8 +27,8 @@ export default function ButtonGrid (props) {
 
 	const
 		[ currentPixelID, setCurrentPixelID ] = useState(-1),
-		[ pixelMap, setPixelMap ] = useState(new Array(16*16).fill(null)),
-		[ pixelIDs, _ ] = useState(Array(16*16).fill(1)),
+		[ pixelMap, setPixelMap ] = useState(new Array(16*16).fill({ r: 0, g: 0, b: 0 })),
+		[ pixelIDs, _ ] = useState(new Array(16*16).fill(1)),
 		[ buttonHeight, __ ] = useState(Dimensions.get("window").width / 16);
 
 	function handleTouch (e) {
@@ -35,34 +40,32 @@ export default function ButtonGrid (props) {
 		const
 			{ x, y } = e,
 			buttonWidth = buttonHeight,
-			buttonIndex = (Math.floor(y / buttonWidth) * 16) + Math.floor(x / buttonWidth);
+			buttonIndex = (Math.floor(y / buttonHeight) * 16) + Math.floor(x / buttonWidth);
 
 		if (buttonIndex >= 0 && buttonIndex < 16*16) {
 			setCurrentPixelID(buttonIndex);
 		}
 	}
 
-	function isPixelActive (pixelID) {
+	function getPixelColor (pixelID) {
 		
 		const _pixel = pixelMap[pixelID];
 
-		return (_pixel.r + _pixel.g + _pixel.b) > 0;
+		return `rgb(${_pixel.r}, ${_pixel.g}, ${_pixel.b})`;
 	}
 
 	useEffect(() => {
 
-		const
-			on = { r: 255, g: 255, b: 255 },
-			off = { r: 0, g: 0, b: 0 };
+		if (currentPixelID === -1)
+			return;
 
-		let
-			pixel = pixelMap[currentPixelID],
-			pixelTotal = (pixel?.r + pixel?.g + pixel?.b) | 0;
+		let pixel = pixelMap[currentPixelID];
+		const pixelTotal = (pixel.r + pixel.g + pixel.b) | 0;
 
 		if (pixelTotal === 0) {
-			pixel = on;
-		} else if (pixelTotal === 255*3) {
-			pixel = null;
+			pixel = { r: 255, g: 255, b: 255 };
+		} else {
+			pixel = { r: 0, g: 0, b: 0 };
 		}
 
 		setPixelMap(pixelMap.map((_pixel, index) => {
@@ -73,11 +76,7 @@ export default function ButtonGrid (props) {
 			}
 		}));
 
-		if (pixel === null) {
-			props.paintRawFrame(`S${currentPixelID}|0,0,0`);
-		} else {
-			props.paintRawFrame(`S${currentPixelID}|${pixel.r},${pixel.g},${pixel.b}`);
-		}
+		props.paintRawFrame(`S${currentPixelID}|${pixel.r},${pixel.g},${pixel.b}`);
 
 	}, [ currentPixelID ] );
 
@@ -92,10 +91,10 @@ export default function ButtonGrid (props) {
 		<GestureDetector gesture={gestureHandler}>
 			<Grid
 				style={styles.grid}
-				renderItem={({ _, index }) => (
+				renderItem={(_, index) => (
 					<GridButton
 						key={index}
-						active={pixelMap[index] !== null}
+						color={getPixelColor(index)}
 						height={buttonHeight}
 					/>
 				)}
@@ -107,17 +106,14 @@ export default function ButtonGrid (props) {
 }
 
 const styles = StyleSheet.create({
+
 	grid: {
 		flex: 1
 	},
+
 	button: {
 		flex: 1,
 		margin: 1
-	},
-	activeButton: {
-		backgroundColor: "#fff"
-	},
-	inactiveButton: {
-		backgroundColor: "#000"
 	}
+
 });
