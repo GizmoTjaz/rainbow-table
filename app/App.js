@@ -59,7 +59,7 @@ export default class App extends React.Component {
 		}
 
 		this.ws.onclose = (e) => {
-			console.error(e.message);
+			console.error(e);
 		}
 
 	}
@@ -72,13 +72,13 @@ export default class App extends React.Component {
 					<StatusBar style="light" />
 					<View style={styles.header}>
 						<Text style={styles.itemName}>Rainbow Table</Text>
-						<Text style={[ styles.itemStatus, this.isReady ? styles.itemStatusActive : styles.itemStatusInactive ]}>⬤</Text>
+						<Text style={[ styles.itemStatus, this.state.isReady ? styles.itemStatusActive : styles.itemStatusInactive ]}>⬤</Text>
 					</View>
 					<View style={styles.contentContainer}>
 						{
 							this.state.isReady
 								? (
-									<View style={styles.contentContainer}>
+									<Fragment>
 										<Button
 											title="Clear"
 											color="#a31ffc"
@@ -89,7 +89,7 @@ export default class App extends React.Component {
 											paintFrame={ data => this.paintFrame(data) }
 											paintRawFrame={ data => this.ws.send(data) }
 										/>
-									</View>
+									</Fragment>
 								)
 								: <ActivityIndicator size="large" color="#fff" />
 						}
@@ -139,9 +139,7 @@ const styles = StyleSheet.create({
 
 	contentContainer: {
 		flex: 1,
-		flexDirection: "column",
-		justifyContent: "center",
-		alignItems: "center"
+		flexDirection: "column"
 	},
 	grid: {
 		flex: 1
