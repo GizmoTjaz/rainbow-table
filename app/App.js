@@ -22,6 +22,12 @@ export default class App extends React.Component {
 		this.ws = new WebSocket("ws://192.168.64.109/ws");
 	}
 
+	sendData (data) {
+		if (this.state.isReady) {
+			this.ws.send(data);
+		}
+	}
+
 	paintFrame (pixelMap) {
 		
 		let _frame = new Array(16*16);
@@ -36,11 +42,11 @@ export default class App extends React.Component {
 
 		_frame = _frame.join("").slice(0, -1);
 
-		this.ws.send(_frame);
+		this.sendData(_frame);
 	}
 
 	clearFrame () {
-		this.ws.send("C");
+		this.sendData("C");
 	}
 
 	componentDidMount () {
@@ -87,7 +93,7 @@ export default class App extends React.Component {
 										<ButtonGrid
 											style={styles.grid}
 											paintFrame={ data => this.paintFrame(data) }
-											paintRawFrame={ data => this.ws.send(data) }
+											paintRawFrame={ data => this.sendData(data) }
 										/>
 									</Fragment>
 								)
