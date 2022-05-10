@@ -8,7 +8,7 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#222222"
+      "backgroundColor": "#0d0d0d"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -19,7 +19,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.tjaz.rainbowtable",
-	  "backgroundColor": "#222222"
+	  "backgroundColor": "#0d0d0d"
     },
     "android": {
       "adaptiveIcon": {
