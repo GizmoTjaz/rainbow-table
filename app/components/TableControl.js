@@ -32,7 +32,11 @@ function HSVtoRGB (h, s, v) {
 	b = Math.round( (b + m)* 255);
   
 	return { r, g, b };
-  }
+}
+
+function formatPixelColor (pixelColor) {
+	return `rgb(${pixelColor.r},${pixelColor.g},${pixelColor.b})`;
+}
 
 export default function TableControl (props) {
 
@@ -44,7 +48,7 @@ export default function TableControl (props) {
 				<TouchableOpacity style={styles.button}>
 					<Button
 						title="Clear"
-						color="#fff"
+						color="#FFF"
 						onPress={ () => props.clearFrame() }
 					/>
 				</TouchableOpacity>
@@ -59,12 +63,13 @@ export default function TableControl (props) {
 				<View style={styles.colorPicker}>
 					<SliderHuePicker
 						useNativeDriver={true}
-						oldColor={`rgba(${pixelColor.r},${pixelColor.g},${pixelColor.b})`}
+						oldColor={formatPixelColor(pixelColor)}
 						trackStyle={styles.colorPickerTrack}
 						thumbStyle={styles.colorPickerThumb}
 						onColorChange={ color => setPixelColor(HSVtoRGB(color.h, 1, 1)) }
 					/>
 				</View>
+				<View style={[ styles.colorPreviewBox, { backgroundColor: formatPixelColor(pixelColor) } ]} />
 			</View>
 		</View>
 	);
@@ -97,8 +102,9 @@ const styles = StyleSheet.create({
 
 	colorPickerContainer: {
 		width: "100%",
-		flexDirection: "row",
+		flexDirection: "column",
 		justifyContent: "center",
+		alignItems: "center",
 		marginTop: 30
 	},
 	colorPicker: {
@@ -115,6 +121,12 @@ const styles = StyleSheet.create({
 		width: 30,
 		height: 30,
 		borderRadius: 30
+	},
+	colorPreviewBox: {
+		width: 50,
+		height: 50,
+		marginTop: 20,
+		borderRadius: 50
 	}
 
 });
