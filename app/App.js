@@ -20,7 +20,7 @@ export default class App extends React.Component {
 			clearSignal: 0
 		}
 
-		this.ws = new WebSocket("ws://192.168.4.1/ws");
+		this.ws = new WebSocket("ws://192.168.64.109/ws");
 	}
 
 	sendData (data) {
@@ -47,10 +47,10 @@ export default class App extends React.Component {
 	}
 
 	clearFrame () {
-		
-		this.setState(({
+
+		this.setState({
 			clearSignal: this.state.clearSignal + 1
-		}));
+		});
 
 		this.sendData("C");
 	}
@@ -91,10 +91,10 @@ export default class App extends React.Component {
 							this.state.isReady
 								? (
 									<TableControl
+										sendData={ (data) => this.sendData(data) }
+										paintFrame={ (frame) => this.paintFrame(frame) }
+										clearFrame={ () => this.clearFrame() }
 										clearSignal={this.clearSignal}
-										paintFrame={this.paintFrame}
-										clearFrame={this.clearFrame}
-										sendData={this.sendData}
 									/>
 								)
 								: <ActivityIndicator size="large" color="#fff" />
