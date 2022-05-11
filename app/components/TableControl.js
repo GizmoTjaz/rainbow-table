@@ -56,13 +56,15 @@ export default function TableControl (props) {
 				paintRawFrame={ (data) => props.sendData(data) }
 			/>
 			<View style={styles.colorPickerContainer}>
-				<SliderHuePicker
-					useNativeDriver={true}
-					oldColor={`rgba(${pixelColor.r},${pixelColor.g},${pixelColor.b})`}
-					trackStyle={styles.colorPicker}
-					thumbStyle={styles.colorPickerThumb}
-					onColorChange={ color => setPixelColor(HSVtoRGB(color.h, 1, 1)) }
-				/>
+				<View style={styles.colorPicker}>
+					<SliderHuePicker
+						useNativeDriver={true}
+						oldColor={`rgba(${pixelColor.r},${pixelColor.g},${pixelColor.b})`}
+						trackStyle={styles.colorPickerTrack}
+						thumbStyle={styles.colorPickerThumb}
+						onColorChange={ color => setPixelColor(HSVtoRGB(color.h, 1, 1)) }
+					/>
+				</View>
 			</View>
 		</View>
 	);
@@ -95,10 +97,14 @@ const styles = StyleSheet.create({
 
 	colorPickerContainer: {
 		width: "100%",
-		flexDirection: "row"
+		flexDirection: "row",
+		justifyContent: "center",
 	},
 	colorPicker: {
-		width: "90%",
+		width: "85%"
+	},
+	colorPickerTrack: {
+		width: "100%",
 		height: 25,
 		borderRadius: 25,
 		backgroundColor: "#ff0000"
