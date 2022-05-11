@@ -3,7 +3,7 @@ import React from "react";
 
 // Components
 import { Fragment } from "react";
-import { Button, SafeAreaView, StyleSheet, View, ActivityIndicator, Text, TouchableOpacity } from "react-native";
+import { SafeAreaView, StyleSheet, View, ActivityIndicator, Text } from "react-native";
 import { StatusBar } from "expo-status-bar";
 
 // Local Components
@@ -94,7 +94,7 @@ export default class App extends React.Component {
 										sendData={ (data) => this.sendData(data) }
 										paintFrame={ (frame) => this.paintFrame(frame) }
 										clearFrame={ () => this.clearFrame() }
-										clearSignal={this.clearSignal}
+										clearSignal={this.state.clearSignal}
 									/>
 								)
 								: <ActivityIndicator size="large" color="#fff" />

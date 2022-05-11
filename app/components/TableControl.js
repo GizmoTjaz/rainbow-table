@@ -51,7 +51,7 @@ export default function TableControl (props) {
 			</View>
 			<ButtonGrid
 				pixelColor={pixelColor}
-				clearFrame={props.clearSignal}
+				clearSignal={props.clearSignal}
 				paintFrame={ (frame) => props.paintFrame(frame) }
 				paintRawFrame={ (data) => props.sendData(data) }
 			/>
