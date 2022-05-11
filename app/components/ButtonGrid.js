@@ -2,17 +2,17 @@
 import React, { useEffect, useState } from "react";
 
 // Components
-import { StyleSheet, Dimensions, View } from "react-native";
+import { Dimensions, View } from "react-native";
 import { Gesture, GestureDetector, State } from "react-native-gesture-handler";
-import Grid from "react-native-grid-component";
+import { FlatGrid } from "react-native-super-grid";
 
 function GridButton (props) {
 	return (
 		<View
 			style={[
-				styles.button,
 				{
-					height: props.height,
+					width: props.dimension,
+					height: props.dimension,
 					backgroundColor: props.color
 				}
 			]}
@@ -90,31 +90,20 @@ export default function ButtonGrid (props) {
 
 	return (
 		<GestureDetector gesture={gestureHandler}>
-			<Grid
-				style={styles.grid}
-				renderItem={(_, index) => (
+			<FlatGrid
+				renderItem={({ index }) => (
 					<GridButton
 						key={index}
 						color={getPixelColor(index)}
-						height={buttonHeight}
+						dimension={buttonHeight}
 					/>
 				)}
 				data={pixelIDs}
-				numColumns={16}
+				itemDimension={buttonHeight}
+				fixed={true}
+				spacing={0}
+				maxItemsPerRow={16}
 			/>
 		</GestureDetector>
 	);
 }
-
-const styles = StyleSheet.create({
-
-	grid: {
-		flex: 1
-	},
-
-	button: {
-		flex: 1,
-		margin: 1
-	}
-
-});
