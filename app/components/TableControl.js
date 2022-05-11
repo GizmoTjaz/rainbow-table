@@ -50,7 +50,6 @@ export default function TableControl (props) {
 				</TouchableOpacity>
 			</View>
 			<ButtonGrid
-				style={styles.grid}
 				pixelColor={pixelColor}
 				clearFrame={props.clearSignal}
 				paintFrame={ (frame) => props.paintFrame(frame) }
@@ -59,7 +58,7 @@ export default function TableControl (props) {
 			<View style={styles.colorPickerContainer}>
 				<SliderHuePicker
 					useNativeDriver={true}
-					oldColor={pixelColor}
+					oldColor={`rgba(${pixelColor.r},${pixelColor.g},${pixelColor.b})`}
 					trackStyle={styles.colorPicker}
 					thumbStyle={styles.colorPickerThumb}
 					onColorChange={ color => setPixelColor(HSVtoRGB(color.h, 1, 1)) }
@@ -72,7 +71,7 @@ export default function TableControl (props) {
 const styles = StyleSheet.create({
 
 	container: {
-		justifyContent: "center",
+		flexDirection: "column",
 		alignItems: "center"
 	},
 
@@ -92,10 +91,6 @@ const styles = StyleSheet.create({
 		paddingRight: 10,
 		marginLeft: 5,
 		marginRight: 5
-	},
-
-	grid: {
-		flex: 1
 	},
 
 	colorPickerContainer: {
