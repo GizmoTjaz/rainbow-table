@@ -83,7 +83,7 @@ export default class App extends React.Component {
 				<SafeAreaView style={styles.container}>
 					<StatusBar style="light" />
 					<View style={styles.header}>
-						<Text style={styles.itemName}>Rainbow Table</Text>
+						<Text style={styles.itemName}>Mavrična Tabla</Text>
 						<Text style={[ styles.itemStatus, this.state.isReady ? styles.itemStatusActive : styles.itemStatusInactive ]}>⬤</Text>
 					</View>
 					<View style={styles.contentContainer}>

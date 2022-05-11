@@ -47,7 +47,7 @@ export default function TableControl (props) {
 			<View style={styles.buttonRow}>
 				<TouchableOpacity style={styles.button}>
 					<Button
-						title="Clear"
+						title="Počisti"
 						color="#FFF"
 						onPress={ () => props.clearFrame() }
 					/>
