@@ -19,6 +19,7 @@
     "react-native": "0.68.1",
     "react-native-gesture-handler": "^2.2.1",
     "react-native-grid-component": "^2.0.1",
+    "react-native-slider-color-picker": "^2.2.2",
     "react-native-web": "0.17.7"
   },
   "devDependencies": {

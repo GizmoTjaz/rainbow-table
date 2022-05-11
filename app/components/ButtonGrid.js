@@ -11,9 +11,6 @@ function GridButton (props) {
 		<View
 			style={[
 				styles.button,
-				props.active
-					? styles.activeButton
-					: styles.inactiveButton,
 				{
 					height: props.height,
 					backgroundColor: props.color
@@ -62,10 +59,10 @@ export default function ButtonGrid (props) {
 		let pixel = pixelMap[currentPixelID];
 		const pixelTotal = (pixel.r + pixel.g + pixel.b) | 0;
 
-		if (pixelTotal === 0) {
-			pixel = { r: 255, g: 255, b: 255 };
-		} else {
+		if (pixelTotal > 0) {
 			pixel = { r: 0, g: 0, b: 0 };
+		} else {
+			pixel = props.pixelColor;
 		}
 
 		setPixelMap(pixelMap.map((_pixel, index) => {
