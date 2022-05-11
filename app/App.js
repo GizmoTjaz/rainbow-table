@@ -7,7 +7,7 @@ import { Button, SafeAreaView, StyleSheet, View, ActivityIndicator, Text, Toucha
 import { StatusBar } from "expo-status-bar";
 
 // Local Components
-import ButtonGrid from "./ButtonGrid";
+import TableControl from "./components/TableControl";
 
 export default class App extends React.Component {
 
@@ -90,23 +90,12 @@ export default class App extends React.Component {
 						{
 							this.state.isReady
 								? (
-									<Fragment>
-										<View style={styles.buttonRow}>
-											<TouchableOpacity style={styles.button}>
-												<Button
-													title="Clear"
-													color="#fff"
-													onPress={ () => this.clearFrame() }
-												/>
-											</TouchableOpacity>
-										</View>
-										<ButtonGrid
-											clearSignal={this.state.clearSignal}
-											style={styles.grid}
-											paintFrame={ data => this.paintFrame(data) }
-											paintRawFrame={ data => this.sendData(data) }
-										/>
-									</Fragment>
+									<TableControl
+										clearSignal={this.clearSignal}
+										paintFrame={this.paintFrame}
+										clearFrame={this.clearFrame}
+										sendData={this.sendData}
+									/>
 								)
 								: <ActivityIndicator size="large" color="#fff" />
 						}
@@ -118,16 +107,6 @@ export default class App extends React.Component {
 }
 
 const styles = StyleSheet.create({
-
-	button: {
-		backgroundColor: "#a31ffc",
-		borderRadius: 15,
-		alignSelf: "center",
-		paddingTop: 3,
-		paddingBottom: 3,
-		paddingLeft: 10,
-		paddingRight: 10
-	},
 
 	container: {
 		flex: 1,
@@ -167,13 +146,6 @@ const styles = StyleSheet.create({
 	contentContainer: {
 		flex: 1,
 		flexDirection: "column"
-	},
-	grid: {
-		flex: 1
-	},
-
-	buttonRow: {
-		marginTop: 15,
-		marginBottom: 15
 	}
+
 });
