@@ -33,7 +33,7 @@ void writePixelData (const CRGBArray<NUM_LEDS> &canvas, const uint8_t &pixelInde
 }
 
 void clearCanvas (const CRGBArray<NUM_LEDS> &canvas) {
-	for (CRGB & pixel : canvas) {
+	for (CRGB &pixel : canvas) {
 		pixel = CRGB(0, 0, 0);
 	}
 }
