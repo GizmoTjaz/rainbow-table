@@ -9,7 +9,7 @@
 #endif
 
 #ifndef WIFI_PASSWORD
-#define WIFI_PASSWORD "tabla12345"
+#define WIFI_PASSWORD "123456789"
 #endif
 
 #define MAX_PACKET_LENGTH NUM_LEDS * (3 * 3 + 2 + 1)
