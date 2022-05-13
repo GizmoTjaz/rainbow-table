@@ -12,6 +12,8 @@
 #define WIFI_PASSWORD "tabla12345"
 #endif
 
+#define MAX_PACKET_LENGTH NUM_LEDS * (3 * 3 + 2 + 1)
+
 // Core
 #include <Arduino.h>
 #include <math.h>

@@ -3,12 +3,11 @@
 ```
 // Wi-Fi
 #define SERVER_MODE false // Defaults to true, will set up a Wi-Fi network of its own
-#define WIFI_SSID "WI-FI NETWORK NAME"
-#define WIFI_PASSWORD "WI-FI NETWORK PASSWORD"
+#define WIFI_SSID "WI-FI NETWORK NAME" // Optional, defaults to "Rainbow Table"
+#define WIFI_PASSWORD "WI-FI NETWORK PASSWORD" // Optional, defaults to "123456789"
 
 // LED Matrix
 #define NUM_LEDS 16 * 16
-#define MAX_PACKET_LENGTH NUM_LEDS * (3 * 3 + 2 + 1)
 
 // PIN setup
 #define MATRIX_DATA_PIN 25
