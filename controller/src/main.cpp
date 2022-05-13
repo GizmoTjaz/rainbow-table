@@ -167,11 +167,8 @@ void setup () {
 }
 
 void loop () {
-
 	if (!isBusyRendering) {
 		FastLED.setBrightness(10);
 		FastLED.show();
 	}
-
-	ws.cleanupClients();
 }
