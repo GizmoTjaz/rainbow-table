@@ -5,11 +5,11 @@
 #endif
 
 #ifndef WIFI_SSID
-#define WIFI_SSID "Rainbow Table"
+#define WIFI_SSID "Mavrična Tabla"
 #endif
 
 #ifndef WIFI_PASSWORD
-#define WIFI_PASSWORD "rainbowtable12345"
+#define WIFI_PASSWORD "tabla12345"
 #endif
 
 // Core
@@ -37,6 +37,10 @@ char packet[MAX_PACKET_LENGTH] = {};
 size_t packetLength = 0;
 
 bool isBusyRendering = false;
+
+// IPAddress localIP(192, 168, 1, 69);
+// IPAddress gateway(192, 168, 1, 1);
+// IPAddress subnet(255, 255, 0, 0);
 
 void connectToWiFiNetwork () {
 
@@ -92,6 +96,7 @@ void setup () {
 		Serial.println(WiFi.softAPIP());
 
 	} else {
+		// WiFi.config(localIP, gateway, subnet);
 		connectToWiFiNetwork();
 	}
 
