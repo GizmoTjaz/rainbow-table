@@ -20,7 +20,8 @@
     "react-native-gesture-handler": "^2.2.1",
     "react-native-slider-color-picker": "^2.2.2",
     "react-native-super-grid": "^4.4.0",
-    "react-native-web": "0.17.7"
+    "react-native-web": "0.17.7",
+    "@react-native-async-storage/async-storage": "~1.17.3"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"
