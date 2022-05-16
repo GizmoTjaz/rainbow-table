@@ -7,7 +7,6 @@ import { Gesture, GestureDetector, State } from "react-native-gesture-handler";
 import { FlatGrid } from "react-native-super-grid";
 
 // !! TAPPING ON A PIXEL AGAIN DOESN'T WORK BECAUSE CURRENTPIXELID FORBIDS IT
-// !! GRID LINES
 
 function GridButton (props) {
 	return (
