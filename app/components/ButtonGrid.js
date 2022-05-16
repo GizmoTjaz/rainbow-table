@@ -106,6 +106,7 @@ export default function ButtonGrid (props) {
 				fixed={true}
 				spacing={0}
 				maxItemsPerRow={16}
+				scrollEnabled={false}
 			/>
 		</GestureDetector>
 	);
