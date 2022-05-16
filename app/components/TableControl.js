@@ -169,7 +169,8 @@ const styles = StyleSheet.create({
 	switchContainer: {
 		flexDirection: "column",
 		justifyContent: "center",
-		alignItems: "center"
+		alignItems: "center",
+		marginLeft: 30
 	},
 	switchLabel: {
 		color: "#FFF",
