@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 
 // Components
-import { Button, StyleSheet, View, TouchableOpacity } from "react-native";
+import { Button, StyleSheet, View, TouchableOpacity, Switch, Text } from "react-native";
 import { SliderHuePicker } from "react-native-slider-color-picker";
 
 // Local Components
@@ -40,7 +40,9 @@ function formatPixelColor (pixelColor) {
 
 export default function TableControl (props) {
 
-	const [ pixelColor, setPixelColor ] = useState({ r: 255, g: 255, b: 255 });
+	const
+		[ pixelColor, setPixelColor ] = useState({ r: 255, g: 255, b: 255 }),
+		[ gridState, setGridState ] = useState(false);
 
 	return (
 		<View style={styles.container}>
@@ -52,10 +54,20 @@ export default function TableControl (props) {
 						onPress={ () => props.clearFrame() }
 					/>
 				</TouchableOpacity>
+				<View style={styles.switchContainer}>
+					<Text style={styles.switchLabel}>Mreža</Text>
+					<Switch
+						trackColor={{ true: "#a31ffc", false: "#222" }}
+						thumbColor="#FFF"
+						onValueChange={ () => setGridState(!gridState) }
+						value={gridState}
+					/>
+				</View>
 			</View>
 			<ButtonGrid
 				pixelColor={pixelColor}
 				clearSignal={props.clearSignal}
+				gridState={gridState}
 				paintFrame={ (frame) => props.paintFrame(frame) }
 				paintRawFrame={ (data) => props.sendData(data) }
 			/>
@@ -86,7 +98,8 @@ const styles = StyleSheet.create({
 		marginTop: 15,
 		marginBottom: 15,
 		flexDirection: "row",
-		justifyContent: "center"
+		justifyContent: "space-between",
+		alignItems: "center"
 	},
 	button: {
 		backgroundColor: "#a31ffc",
@@ -127,6 +140,16 @@ const styles = StyleSheet.create({
 		height: 50,
 		marginTop: 20,
 		borderRadius: 50
+	},
+
+	switchContainer: {
+		flexDirection: "column",
+		justifyContent: "center",
+		alignItems: "center"
+	},
+	switchLabel: {
+		color: "#FFF",
+		paddingBottom: 5
 	}
 
 });

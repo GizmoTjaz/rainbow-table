@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 
 // Components
-import { Dimensions, View } from "react-native";
+import { Dimensions, View, StyleSheet } from "react-native";
 import { Gesture, GestureDetector, State } from "react-native-gesture-handler";
 import { FlatGrid } from "react-native-super-grid";
 
@@ -13,6 +13,7 @@ function GridButton (props) {
 	return (
 		<View
 			style={[
+				props.gridState ? styles.gridButtonLines : "",
 				{
 					width: props.dimension,
 					height: props.dimension,
@@ -99,6 +100,7 @@ export default function ButtonGrid (props) {
 						key={index}
 						color={getPixelColor(index)}
 						dimension={buttonHeight}
+						gridState={props.gridState}
 					/>
 				)}
 				data={pixelIDs}
@@ -111,3 +113,10 @@ export default function ButtonGrid (props) {
 		</GestureDetector>
 	);
 }
+
+const styles = StyleSheet.create({
+	gridButtonLines: {
+		borderWidth: 1,
+		borderColor: "#111"
+	}
+});
