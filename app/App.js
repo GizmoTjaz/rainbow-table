@@ -3,7 +3,7 @@ import React from "react";
 
 // Components
 import { Fragment } from "react";
-import { SafeAreaView, StyleSheet, View, ActivityIndicator, Text } from "react-native";
+import { SafeAreaView, StyleSheet, View, Text } from "react-native";
 import { StatusBar } from "expo-status-bar";
 
 // Local Components
@@ -87,18 +87,12 @@ export default class App extends React.Component {
 						<Text style={[ styles.itemStatus, this.state.isReady ? styles.itemStatusActive : styles.itemStatusInactive ]}>⬤</Text>
 					</View>
 					<View style={styles.contentContainer}>
-						{
-							this.state.isReady
-								? (
-									<TableControl
-										sendData={ (data) => this.sendData(data) }
-										paintFrame={ (frame) => this.paintFrame(frame) }
-										clearFrame={ () => this.clearFrame() }
-										clearSignal={this.state.clearSignal}
-									/>
-								)
-								: <ActivityIndicator size="large" color="#fff" />
-						}
+						<TableControl
+							sendData={ (data) => this.sendData(data) }
+							paintFrame={ (frame) => this.paintFrame(frame) }
+							clearFrame={ () => this.clearFrame() }
+							clearSignal={this.state.clearSignal}
+						/>
 					</View>
 				</SafeAreaView>
 			</Fragment>
