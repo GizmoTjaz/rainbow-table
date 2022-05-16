@@ -1,5 +1,6 @@
 // Modules
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Components
 import { Button, StyleSheet, View, TouchableOpacity, Switch, Text } from "react-native";
@@ -44,6 +45,29 @@ export default function TableControl (props) {
 		[ pixelColor, setPixelColor ] = useState({ r: 255, g: 255, b: 255 }),
 		[ gridState, setGridState ] = useState(false);
 
+	useEffect(() => {
+
+		async function fetchData () {
+
+			const _gridState = JSON.parse(await AsyncStorage.getItem("@grid_state"));
+
+			if (_gridState !== null) {
+				setGridState(_gridState);
+			}
+
+		};
+
+		fetchData();
+
+	}, []);
+
+	updateGridState = (state) => {
+
+		setGridState(state);
+
+		AsyncStorage.setItem("@grid_state", JSON.stringify(state));
+	};
+
 	return (
 		<View style={styles.container}>
 			<View style={styles.buttonRow}>
@@ -59,7 +83,7 @@ export default function TableControl (props) {
 					<Switch
 						trackColor={{ true: "#a31ffc", false: "#222" }}
 						thumbColor="#FFF"
-						onValueChange={ () => setGridState(!gridState) }
+						onValueChange={ () => updateGridState(!gridState) }
 						value={gridState}
 					/>
 				</View>
