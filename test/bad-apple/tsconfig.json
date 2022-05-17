@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+        "module": "CommonJS",
+        "outDir": "./build",
+        "rootDir": "./src",
+        "target": "ES2015",
+        "strict": true,
+        "noImplicitAny": true,
+        "esModuleInterop": true,
+		"baseUrl": "src",
+		"alwaysStrict": true,
+		"paths": {
+			"@/*": ["/*"],
+			"@utils/*": ["utils/*"],
+			"@typings/*": ["typings/*"],
+			"@components/*": ["components/*"]
+		},
+		"plugins": [
+			{ "transform": "typescript-transform-paths" },
+		]
+    }
+}
