@@ -1,0 +1,1 @@
+export const PIXEL_COUNT = 16*16;
