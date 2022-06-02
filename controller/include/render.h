@@ -147,14 +147,6 @@ void renderCanvas (const CRGBArray<NUM_LEDS> &canvas, const char (&canvasData)[M
 		}
 	}
 
-	int lastCharacterCode = (int)canvasData[canvasDataLength - 1];
-
-	// Write last pixel if it's a number
-	if (lastCharacterCode >= (int)'0' && lastCharacterCode <= (int)'9') {
-		writeColorChannelValueToPixel(_pixel, colorChannelValueDigits, colorChannelIndex);
-		writePixelData(canvas, pixelIndex, _pixel);
-	}
-
 }
 
 #endif
