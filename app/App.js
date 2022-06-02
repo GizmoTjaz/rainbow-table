@@ -89,28 +89,26 @@ export default class App extends React.Component {
 			console.error(e);
 		}
 
-		async function fetchSaveData () {
+		async function fetchSaveData (self) {
 
 			const _gridState = JSON.parse(await AsyncStorage.getItem("@grid_state"));
 
 			if (_gridState !== null) {
-				this.setState({
+				self.setState({
 					gridLinesState: _gridState
 				});
 			}
 
 		};
 
-		fetchSaveData();
+		fetchSaveData(this);
 
 	}
 
 	componentDidUpdate (_, prevState) {
-
 		if (prevState.gridLinesState !== this.state.gridLinesState) {
 			AsyncStorage.setItem("@grid_state", JSON.stringify(this.state.gridLinesState));
 		}
-
 	}
 
 	render () {
