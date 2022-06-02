@@ -31,7 +31,7 @@ export default function PixelGrid (props) {
 	const
 		[ currentPixelID, setCurrentPixelID ] = useState(-1),
 		[ pixelIDs, _ ] = useState(new Array(PIXEL_COUNT).fill(1)),
-		[ buttonHeight, __ ] = useState(Dimensions.get("window").width / 16);
+		[ buttonSideLength, __ ] = useState(Dimensions.get("window").width / 16);
 
 	function handleTouch (e) {
 
@@ -41,8 +41,8 @@ export default function PixelGrid (props) {
 
 		const
 			{ x, y } = e,
-			buttonWidth = buttonHeight,
-			buttonIndex = (Math.floor(y / buttonHeight) * 16) + Math.floor(x / buttonWidth);
+			buttonWidth = buttonSideLength,
+			buttonIndex = (Math.floor(y / buttonSideLength) * 16) + Math.floor(x / buttonWidth);
 
 		if (buttonIndex >= 0 && buttonIndex < PIXEL_COUNT) {
 			setCurrentPixelID(buttonIndex);
@@ -88,12 +88,12 @@ export default function PixelGrid (props) {
 					<GridButton
 						key={index}
 						color={props.pixelMap[index]}
-						dimension={buttonHeight}
+						dimension={buttonSideLength}
 						gridLinesState={props.gridLinesState}
 					/>
 				)}
 				data={pixelIDs}
-				itemDimension={buttonHeight}
+				itemDimension={buttonSideLength}
 				fixed={true}
 				spacing={0}
 				maxItemsPerRow={16}
