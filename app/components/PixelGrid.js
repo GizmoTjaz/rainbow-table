@@ -72,8 +72,8 @@ export default function PixelGrid (props) {
 		}
 
 		if (
-			newPixelData.r !== currentPixelData.r &&
-			newPixelData.g !== currentPixelData.g &&
+			newPixelData.r !== currentPixelData.r ||
+			newPixelData.g !== currentPixelData.g ||
 			newPixelData.b !== currentPixelData.b
 		) {
 			props.paintPixel(currentPixelID, newPixelData);
