@@ -42,7 +42,15 @@ export default class App extends React.Component {
 	}
 
 	paintPixel (pixelID, color) {
-		this.state.pixelMap[pixelID] = color;
+
+		let _frame = this.state.pixelMap;
+
+		_frame[pixelID] = color;
+
+		this.setState({
+			pixelMap: _frame
+		});
+
 		this.sendData(`S${pixelID}|${color.r},${color.g},${color.b}|`);
 	}
 
