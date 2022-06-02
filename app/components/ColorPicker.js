@@ -39,9 +39,13 @@ export default function ColorPicker (props) {
 
 	const [ pixelColor, setPixelColor ] = useState({ r: 255, g: 255, b: 255 });
 
-	useEffect(() => {
-		props.onColorChange(pixelColor);
-	}, [ pixelColor ]);
+	function updateCurrentColor (hsvColor) {
+		
+		const rgbColor = HSVtoRGB(hsvColor.h, 1, 1);
+
+		setPixelColor(rgbColor);
+		props.onColorChange(rgbColor);
+	}
 
 	return (
 		<View style={styles.colorPickerContainer}>
@@ -51,7 +55,7 @@ export default function ColorPicker (props) {
 					oldColor={formatPixelColor(pixelColor)}
 					trackStyle={styles.colorPickerTrack}
 					thumbStyle={styles.colorPickerThumb}
-					onColorChange={ color => setPixelColor(HSVtoRGB(color.h, 1, 1)) }
+					onColorChange={ hsvColor => updateCurrentColor(hsvColor) }
 				/>
 			</View>
 			<View style={[ styles.colorPreviewBox, { backgroundColor: formatPixelColor(pixelColor) } ]} />
