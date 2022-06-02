@@ -67,13 +67,7 @@ export default function PixelGrid (props) {
 
 		const
 			currentPixelData = props.pixelMap[currentPixelID],
-			currentPixelTotal = (currentPixelData.r + currentPixelData.g + currentPixelData.b) | 0;
-
-		let newPixelData = { r: 0, g: 0, b: 0};
-
-		if (currentPixelTotal === 0) {
 			newPixelData = props.currentPixelColor;
-		}
 
 		if (
 			newPixelData.r !== currentPixelData.r ||
