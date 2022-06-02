@@ -32,8 +32,67 @@ export default class App extends React.Component {
 			currentPixelColor: { r: 255, g: 255, b: 255 }
 		}
 
-		this.ws = new WebSocket("ws://192.168.64.111/ws");
+		this.ws = null;
+		this.reconnectInterval = 0;
 	}
+
+	// WebSocket Connection
+
+	socketOpenHandler () {
+
+		clearInterval(this.reconnectInterval);
+
+		console.log("Connected");
+
+		this.setState({
+			isReady: true
+		});
+	}
+
+	socketErrorHandler (e) {
+		console.error(e);
+	}
+
+	socketCloseHandler () {
+		
+		console.log("Disconnected");
+
+		this.setState({
+			isReady: false
+		});
+
+		setTimeout(() => {
+			this.connect();
+		}, 500);
+	}
+
+	connect () {
+
+		if (this.ws) {
+			this.disconnect();
+		}
+
+		this.ws = new WebSocket("ws://192.168.64.111/ws");
+
+		this.ws.addEventListener("open", this.socketOpenHandler.bind(this));
+		this.ws.addEventListener("error", this.socketErrorHandler);
+		this.ws.addEventListener("close", this.socketCloseHandler.bind(this));
+	}
+
+	disconnect () {
+		if (this.ws) {
+
+			this.ws.close();
+
+			this.ws.removeEventListener("open", this.socketOpenHandler);
+			this.ws.removeEventListener("error", this.socketErrorHandler);
+			this.ws.removeEventListener("close", this.socketCloseHandler);
+
+			this.ws = null;
+		}
+	}
+
+	// Painting
 
 	sendData (data) {
 		if (this.state.isReady) {
@@ -78,24 +137,11 @@ export default class App extends React.Component {
 		this.sendData("C");
 	}
 
+	// Lifecycle Events
+
 	componentDidMount () {
 
-		this.ws.onopen = () => {
-
-			console.log("Connected");
-
-			this.setState({
-				isReady: true
-			});
-		};
-
-		this.ws.onerror = (e) => {
-			console.error(e);
-		}
-
-		this.ws.onclose = (e) => {
-			console.error(e);
-		}
+		this.connect();
 
 		async function fetchSaveData (self) {
 
@@ -117,6 +163,10 @@ export default class App extends React.Component {
 		if (prevState.gridLinesState !== this.state.gridLinesState) {
 			AsyncStorage.setItem("@grid_state", JSON.stringify(this.state.gridLinesState));
 		}
+	}
+
+	componentWillUnmount () {
+		this.disconnect();
 	}
 
 	render () {
