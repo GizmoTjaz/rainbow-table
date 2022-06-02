@@ -9,8 +9,6 @@ import { FlatGrid } from "react-native-super-grid";
 // Utils
 import { PIXEL_COUNT } from "../utils/constants";
 
-// !! TAPPING ON A PIXEL AGAIN DOESN'T WORK BECAUSE CURRENTPIXELID FORBIDS IT
-
 function GridButton (props) {
 	return (
 		<View
@@ -29,9 +27,10 @@ function GridButton (props) {
 export default function PixelGrid (props) {
 
 	const
-		[ currentPixelID, setCurrentPixelID ] = useState(-1),
 		[ pixelIDs, _ ] = useState(new Array(PIXEL_COUNT).fill(1)),
-		[ buttonSideLength, __ ] = useState(Dimensions.get("window").width / 16);
+		[ buttonSideLength, __ ] = useState(Dimensions.get("window").width / 16),
+		[ currentPixelID, setCurrentPixelID ] = useState(-1),
+		[ gestureID, setGestureID ] = useState(0);
 
 	function getPixelColor (pixelIndex) {
 	
@@ -77,14 +76,14 @@ export default function PixelGrid (props) {
 			props.paintPixel(currentPixelID, newPixelData);
 		}
 
-	}, [ currentPixelID ]);
+	}, [ gestureID, currentPixelID ]);
 
 	const gestureHandler = Gesture.Pan()
 		.minDistance(0)
 		.maxPointers(1)
 		.shouldCancelWhenOutside(false)
-		.onStart(handleTouch)
-		.onUpdate(handleTouch);
+		.onUpdate(handleTouch)
+		.onEnd(() => setGestureID(gestureID < 1000 ? gestureID + 1 : 0));
 
 	return (
 		<GestureDetector gesture={gestureHandler}>
