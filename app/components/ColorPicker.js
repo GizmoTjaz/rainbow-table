@@ -62,7 +62,7 @@ export default function ColorPicker (props) {
 const styles = StyleSheet.create({
 
 	colorPickerContainer: {
-		width: "100%",
+		flex: 1,
 		flexDirection: "column",
 		justifyContent: "center",
 		alignItems: "center",
