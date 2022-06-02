@@ -33,6 +33,13 @@ export default function PixelGrid (props) {
 		[ pixelIDs, _ ] = useState(new Array(PIXEL_COUNT).fill(1)),
 		[ buttonSideLength, __ ] = useState(Dimensions.get("window").width / 16);
 
+	function getPixelColor (pixelIndex) {
+	
+		const _pixel = props.pixelMap[pixelIndex];
+
+		return `rgb(${_pixel.r}, ${_pixel.g}, ${_pixel.b})`;
+	}
+
 	function handleTouch (e) {
 
 		if (e.state !== State.ACTIVE) {
@@ -87,7 +94,7 @@ export default function PixelGrid (props) {
 				renderItem={({ index }) => (
 					<GridButton
 						key={index}
-						color={props.pixelMap[index]}
+						color={getPixelColor(index)}
 						dimension={buttonSideLength}
 						gridLinesState={props.gridLinesState}
 					/>
