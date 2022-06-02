@@ -131,6 +131,7 @@ export default class App extends React.Component {
 						<PixelGrid
 							pixelMap={this.state.pixelMap}
 							currentPixelColor={this.state.currentPixelColor}
+							gridLinesState={this.state.gridLinesState}
 							paintPixel={ (pixelID, color) => this.paintPixel(pixelID, color) }
 						/>
 						<ColorPicker
