@@ -1,8 +1,8 @@
 // Modules
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 // Components
-import { Button, StyleSheet, View, TouchableOpacity, Switch, Text } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { SliderHuePicker } from "react-native-slider-color-picker";
 
 // https://gist.github.com/mjackson/5311256
