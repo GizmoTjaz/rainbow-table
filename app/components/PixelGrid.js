@@ -40,6 +40,10 @@ export default function PixelGrid (props) {
 		return `rgb(${_pixel.r}, ${_pixel.g}, ${_pixel.b})`;
 	}
 
+	function getButtonKey (pixelIndex) {
+		return `${pixelIndex}-${getPixelColor(pixelIndex)}`;
+	}
+
 	function handleTouch (e) {
 
 		if (e.state !== State.ACTIVE) {
@@ -93,7 +97,7 @@ export default function PixelGrid (props) {
 			<FlatGrid
 				renderItem={({ index }) => (
 					<GridButton
-						key={index}
+						key={getButtonKey(index)}
 						color={getPixelColor(index)}
 						dimension={buttonSideLength}
 						gridLinesState={props.gridLinesState}
