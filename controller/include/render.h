@@ -38,6 +38,12 @@ void clearCanvas (const CRGBArray<NUM_LEDS> &canvas) {
 	}
 }
 
+void fillCanvas (const CRGBArray<NUM_LEDS> &canvas, const CRGB &pixelData) {
+	for (CRGB &pixel : canvas) {
+		pixel = pixelData;
+	}
+}
+
 void writeColorChannelValueToPixel (CRGB &pixel, std::list<char> &colorChannelValueDigits, const uint8_t &colorChannelIndex) {
 	for (uint8_t i = 0; i < 3; i++) {
 		if (colorChannelValueDigits.size() > 0) {
@@ -56,6 +62,7 @@ void renderCanvas (const CRGBArray<NUM_LEDS> &canvas, const char (&canvasData)[M
 	uint8_t colorChannelValuePosition = 0;
 
 	bool isSkipMode = false;
+	bool isFillMode = false;
 
 	std::string skipIndex = "";
 	std::list<char> colorChannelValueDigits;
@@ -87,7 +94,13 @@ void renderCanvas (const CRGBArray<NUM_LEDS> &canvas, const char (&canvasData)[M
 					colorChannelValuePosition = 0;
 
 					// Write temp pixel data to real pixel
-					writePixelData(canvas, pixelIndex, _pixel);
+					
+					if (isFillMode) {
+						fillCanvas(canvas, _pixel);
+					} else {
+						writePixelData(canvas, pixelIndex, _pixel);
+					}
+
 					_pixel = CRGB(0, 0, 0);
 
 					colorChannelIndex = 0;
@@ -112,6 +125,11 @@ void renderCanvas (const CRGBArray<NUM_LEDS> &canvas, const char (&canvasData)[M
 			case 'S':
 
 				isSkipMode = true;
+
+				break;
+			case 'F':
+
+				isFillMode = true;
 
 				break;
 			default:
