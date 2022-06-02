@@ -27,9 +27,9 @@ export default class App extends React.Component {
 
 		this.state = {
 			isReady: false,
+			gridLinesState: false,
 			pixelMap: generateEmptyPixelMap(),
-			currentPixelColor: { r: 255, g: 255, b: 255 },
-			gridLinesState: false
+			currentPixelColor: { r: 255, g: 255, b: 255 }
 		}
 
 		this.ws = new WebSocket("ws://192.168.64.111/ws");
