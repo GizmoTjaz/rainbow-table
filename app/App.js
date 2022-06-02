@@ -1,5 +1,6 @@
 // Modules
 import React from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Components
 import { Fragment } from "react";
@@ -7,7 +8,16 @@ import { SafeAreaView, StyleSheet, View, Text } from "react-native";
 import { StatusBar } from "expo-status-bar";
 
 // Local Components
-import TableControl from "./components/TableControl";
+import ButtonRow from "./components/ButtonRow";
+import PixelGrid from "./components/PixelGrid";
+import ColorPicker from "./components/ColorPicker";
+
+// Utils
+import { PIXEL_COUNT } from "./utils/constants";
+
+function generateEmptyPixelMap () {
+	return new Array(PIXEL_COUNT).fill({ r: 0, g: 0, b: 0 });
+}
 
 export default class App extends React.Component {
 
@@ -17,10 +27,12 @@ export default class App extends React.Component {
 
 		this.state = {
 			isReady: false,
-			clearSignal: 0
+			pixelMap: generateEmptyPixelMap(),
+			currentPixelColor: { r: 255, g: 255, b: 255 },
+			gridLinesState: false
 		}
 
-		this.ws = new WebSocket("ws://192.168.64.109/ws");
+		this.ws = new WebSocket("ws://192.168.64.111/ws");
 	}
 
 	sendData (data) {
@@ -29,27 +41,30 @@ export default class App extends React.Component {
 		}
 	}
 
-	paintFrame (pixelMap) {
-		
-		let _frame = new Array(16*16);
+	paintPixel (pixelID, color) {
+		this.state.pixelMap[pixelID] = color;
+		this.sendData(`S${pixelID}|${color.r},${color.g},${color.b}|`);
+	}
 
-		pixelMap.forEach((pixel, index) => {
-			if (pixel === null) {
-				_frame[index] = "0,0,0|";
-			} else {
-				_frame[index] = `${pixel.r},${pixel.g},${pixel.b}|`;
-			}
+	fillFrame (color) {
+		
+		let _frame = this.state.pixelMap;
+
+		for (let i = 0; i < PIXEL_COUNT; i++) {
+			_frame[i] = color;
+		}
+
+		this.setState({
+			pixelMap: _frame
 		});
 
-		_frame = _frame.join("").slice(0, -1);
-
-		this.sendData(_frame);
+		this.sendData(`F${color.r},${color.g},${color.b}|`);
 	}
 
 	clearFrame () {
 
 		this.setState({
-			clearSignal: this.state.clearSignal + 1
+			pixelMap: generateEmptyPixelMap()
 		});
 
 		this.sendData("C");
@@ -74,6 +89,28 @@ export default class App extends React.Component {
 			console.error(e);
 		}
 
+		async function fetchSaveData () {
+
+			const _gridState = JSON.parse(await AsyncStorage.getItem("@grid_state"));
+
+			if (_gridState !== null) {
+				this.setState({
+					gridLinesState: _gridState
+				});
+			}
+
+		};
+
+		fetchSaveData();
+
+	}
+
+	componentDidUpdate (_, prevState) {
+
+		if (prevState.gridLinesState !== this.state.gridLinesState) {
+			AsyncStorage.setItem("@grid_state", JSON.stringify(this.state.gridLinesState));
+		}
+
 	}
 
 	render () {
@@ -87,11 +124,19 @@ export default class App extends React.Component {
 						<Text style={[ styles.itemStatus, this.state.isReady ? styles.itemStatusActive : styles.itemStatusInactive ]}>⬤</Text>
 					</View>
 					<View style={styles.contentContainer}>
-						<TableControl
-							sendData={ (data) => this.sendData(data) }
-							paintFrame={ (frame) => this.paintFrame(frame) }
+						<ButtonRow
+							gridLinesState={this.state.gridLinesState}
+							onGridLinesStateChange={ (state) => this.setState({ gridLinesState: state }) }
 							clearFrame={ () => this.clearFrame() }
-							clearSignal={this.state.clearSignal}
+							fillFrameWithCurrentColor={ () => this.fillFrame(this.state.currentPixelColor) }
+						/>
+						<PixelGrid
+							pixelMap={this.state.pixelMap}
+							currentPixelColor={this.state.currentPixelColor}
+							paintPixel={ (pixelID, color) => this.paintPixel(pixelID, color) }
+						/>
+						<ColorPicker
+							onColorChange={ (newColor) => this.setState({ currentPixelColor: newColor }) }
 						/>
 					</View>
 				</SafeAreaView>
