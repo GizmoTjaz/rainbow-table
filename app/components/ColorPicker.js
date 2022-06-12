@@ -7,6 +7,12 @@ import { SliderHuePicker } from "react-native-slider-color-picker";
 
 // https://gist.github.com/mjackson/5311256
 function HSVtoRGB (h, s, v) {
+
+	if (h < 5) {
+		return { r: 0, g: 0, b: 0 };
+	} else if (h > 355) {
+		return { r: 255, g: 255, b: 255 };
+	}
   
 	const hprime = h / 60;
 
