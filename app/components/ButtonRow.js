@@ -3,25 +3,30 @@ import React from "react";
 
 // Components
 import { Button, StyleSheet, View, TouchableOpacity, Switch, Text } from "react-native";
+import Icon from "react-native-vector-icons/Foundation";
 
 export default function ButtonRow (props) {
 	return (
 		<View style={styles.buttonRow}>
-			<View style={styles.buttonContainer}>
-				<TouchableOpacity style={styles.button}>
-					<Button
-						title="Počisti"
-						color="#FFF"
+			<View style={styles.buttonRowContainer}>
+				<View style={styles.buttonContainer}>
+					<Icon.Button
+						name="trash"
+						size={30}
+						style={styles.button}
+						iconStyle={styles.buttonIcon}
 						onPress={ () => props.clearFrame() }
 					/>
-				</TouchableOpacity>
-				<TouchableOpacity style={styles.button}>
-					<Button
-						title="Zapolni"
-						color="#FFF"
+				</View>
+				<View style={styles.buttonContainer}>
+					<Icon.Button
+						name="paint-bucket"
+						size={30}
+						style={styles.button}
+						iconStyle={styles.buttonIcon}
 						onPress={ () => props.fillFrameWithCurrentColor() }
 					/>
-				</TouchableOpacity>
+				</View>
 			</View>
 			<View style={styles.switchContainer}>
 				<Text style={styles.switchLabel}>Mreža</Text>
@@ -45,22 +50,24 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 	},
 
-	buttonContainer: {
+	buttonRowContainer: {
 		flexDirection: "row",
 		alignItems: "center",
 		justifyContent: "flex-start",
-		marginLeft: 15
+		marginLeft: 10
+	},
+	buttonContainer: {
+		paddingRight: 10
 	},
 	button: {
 		backgroundColor: "#a31ffc",
-		borderRadius: 15,
-		alignSelf: "center",
-		paddingTop: 3,
-		paddingBottom: 3,
-		paddingLeft: 10,
-		paddingRight: 10,
-		marginLeft: 5,
-		marginRight: 5
+		width: 45,
+		flexDirection: "row",
+		justifyContent: "center",
+		alignItems: "center"
+	},
+	buttonIcon: {
+		marginRight: 0
 	},
 
 	switchContainer: {
