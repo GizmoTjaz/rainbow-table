@@ -7,20 +7,22 @@ import { Button, StyleSheet, View, TouchableOpacity, Switch, Text } from "react-
 export default function ButtonRow (props) {
 	return (
 		<View style={styles.buttonRow}>
-			<TouchableOpacity style={styles.button}>
-				<Button
-					title="Počisti"
-					color="#FFF"
-					onPress={ () => props.clearFrame() }
-				/>
-			</TouchableOpacity>
-			<TouchableOpacity style={styles.button}>
-				<Button
-					title="Zapolni"
-					color="#FFF"
-					onPress={ () => props.fillFrameWithCurrentColor() }
-				/>
-			</TouchableOpacity>
+			<View style={styles.buttonContainer}>
+				<TouchableOpacity style={styles.button}>
+					<Button
+						title="Počisti"
+						color="#FFF"
+						onPress={ () => props.clearFrame() }
+					/>
+				</TouchableOpacity>
+				<TouchableOpacity style={styles.button}>
+					<Button
+						title="Zapolni"
+						color="#FFF"
+						onPress={ () => props.fillFrameWithCurrentColor() }
+					/>
+				</TouchableOpacity>
+			</View>
 			<View style={styles.switchContainer}>
 				<Text style={styles.switchLabel}>Mreža</Text>
 				<Switch
@@ -37,11 +39,17 @@ export default function ButtonRow (props) {
 const styles = StyleSheet.create({
 
 	buttonRow: {
-		marginTop: 15,
-		marginBottom: 15,
+		flex: 1,
 		flexDirection: "row",
 		justifyContent: "space-between",
-		alignItems: "center"
+		alignItems: "center",
+	},
+
+	buttonContainer: {
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "flex-start",
+		marginLeft: 15
 	},
 	button: {
 		backgroundColor: "#a31ffc",
@@ -59,7 +67,7 @@ const styles = StyleSheet.create({
 		flexDirection: "column",
 		justifyContent: "center",
 		alignItems: "center",
-		marginLeft: 30
+		marginRight: 15
 	},
 	switchLabel: {
 		color: "#FFF",
