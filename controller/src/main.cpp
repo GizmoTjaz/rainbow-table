@@ -12,6 +12,7 @@
 #define WIFI_PASSWORD "123456789"
 #endif
 
+#define NUM_LEDS NUM_LEDS_ROW * NUM_LEDS_COLUMN
 #define MAX_PACKET_LENGTH NUM_LEDS * (3 * 3 + 2 + 1)
 #define FRAME_INTERVAL 1 / 30 * 1000
 

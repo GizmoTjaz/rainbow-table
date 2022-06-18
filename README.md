@@ -7,7 +7,8 @@
 #define WIFI_PASSWORD "WI-FI NETWORK PASSWORD" // Optional, defaults to "123456789"
 
 // LED Matrix
-#define NUM_LEDS 16 * 16
+#define NUM_LEDS_ROW 16
+#define NUM_LEDS_COLUMN 16
 
 // PIN setup
 #define MATRIX_DATA_PIN 25
