@@ -13,6 +13,7 @@
 #endif
 
 #define MAX_PACKET_LENGTH NUM_LEDS * (3 * 3 + 2 + 1)
+#define FRAME_INTERVAL 1 / 30 * 1000
 
 // Core
 #include <Arduino.h>
@@ -28,6 +29,10 @@
 
 // Utils
 #include "render.h"
+#include "animation.h"
+
+// Animations
+#include "snake.h"
 
 // Structs
 CRGBArray<NUM_LEDS> canvas;
@@ -38,7 +43,16 @@ AsyncWebSocket ws("/ws");
 char packet[MAX_PACKET_LENGTH] = {};
 size_t packetLength = 0;
 
+union AnimationProfiles {
+	SnakeAnimation snake;
+};
+
+int animationFrameCounter = 0;
+CRGB currentAnimationColor = CRGB(255, 255, 255);
+SnakeAnimation currentAnimation = SnakeAnimation(canvas);
+
 bool isBusyRendering = false;
+bool isInAnimationMode = true;
 
 // IPAddress localIP(192, 168, 1, 69);
 // IPAddress gateway(192, 168, 1, 1);
@@ -170,6 +184,21 @@ void setup () {
 
 void loop () {
 	if (!isBusyRendering) {
+
+		if (isInAnimationMode) {
+
+			currentAnimation.renderFrame(animationFrameCounter, currentAnimationColor);
+
+			animationFrameCounter++;
+
+			if (animationFrameCounter > currentAnimation.numFrames) {
+				animationFrameCounter = 0;
+				clearCanvas(canvas);
+			}
+
+			delay(FRAME_INTERVAL);
+		}
+
 		FastLED.setBrightness(10);
 		FastLED.show();
 	}
