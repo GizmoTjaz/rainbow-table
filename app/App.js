@@ -12,13 +12,6 @@ import ButtonRow from "./components/ButtonRow";
 import PixelGrid from "./components/PixelGrid";
 import ColorPicker from "./components/ColorPicker";
 
-// Utils
-import { PIXEL_COUNT } from "./utils/constants";
-
-function generateEmptyPixelMap () {
-	return new Array(PIXEL_COUNT).fill({ r: 0, g: 0, b: 0 });
-}
-
 export default class App extends React.Component {
 
 	constructor (props) {
@@ -28,8 +21,8 @@ export default class App extends React.Component {
 		this.state = {
 			isReady: false,
 			gridLinesState: false,
-			pixelMap: generateEmptyPixelMap(),
-			currentPixelColor: { r: 255, g: 255, b: 255 }
+			currentPixelColor: { r: 255, g: 255, b: 255 },
+			forcedPixelColor: null
 		}
 
 		this.ws = null;
@@ -72,7 +65,7 @@ export default class App extends React.Component {
 			this.disconnect();
 		}
 
-		this.ws = new WebSocket("ws://192.168.64.111/ws");
+		this.ws = new WebSocket("ws://192.168.64.113/ws");
 
 		this.ws.addEventListener("open", this.socketOpenHandler.bind(this));
 		this.ws.addEventListener("error", this.socketErrorHandler);
@@ -98,31 +91,17 @@ export default class App extends React.Component {
 		if (this.state.isReady) {
 			this.ws.send(data);
 		}
+		console.log(data);
 	}
 
 	paintPixel (pixelID, color) {
-
-		let _frame = this.state.pixelMap;
-
-		_frame[pixelID] = color;
-
-		this.setState({
-			pixelMap: _frame
-		});
-
 		this.sendData(`S${pixelID}|${color.r},${color.g},${color.b}|`);
 	}
 
 	fillFrame (color) {
 		
-		let _frame = this.state.pixelMap;
-
-		for (let i = 0; i < PIXEL_COUNT; i++) {
-			_frame[i] = color;
-		}
-
 		this.setState({
-			pixelMap: _frame
+			forcedPixelColor: color
 		});
 
 		this.sendData(`F${color.r},${color.g},${color.b}|`);
@@ -131,7 +110,7 @@ export default class App extends React.Component {
 	clearFrame () {
 
 		this.setState({
-			pixelMap: generateEmptyPixelMap()
+			forcedPixelColor: { r: 0, g: 0, b: 0 }
 		});
 
 		this.sendData("C");
@@ -187,8 +166,8 @@ export default class App extends React.Component {
 							fillFrameWithCurrentColor={ () => this.fillFrame(this.state.currentPixelColor) }
 						/>
 						<PixelGrid
-							pixelMap={this.state.pixelMap}
 							currentPixelColor={this.state.currentPixelColor}
+							forcedPixelColor={this.state.forcedPixelColor}
 							gridLinesState={this.state.gridLinesState}
 							paintPixel={ (pixelID, color) => this.paintPixel(pixelID, color) }
 						/>
