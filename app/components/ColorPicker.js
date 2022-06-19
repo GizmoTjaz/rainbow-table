@@ -5,41 +5,8 @@ import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { SliderHuePicker } from "react-native-slider-color-picker";
 
-// https://gist.github.com/mjackson/5311256
-function HSVtoRGB (h, s, v) {
-
-	if (h < 5) {
-		return { r: 0, g: 0, b: 0 };
-	} else if (h > 355) {
-		return { r: 255, g: 255, b: 255 };
-	}
-  
-	const hprime = h / 60;
-
-	const c = v * s;
-	const x = c * (1 - Math.abs(hprime % 2 - 1)); 
-	const m = v - c;
-
-	let r, g, b;
-
-	if (!hprime) {r = 0; g = 0; b = 0; }
-	if (hprime >= 0 && hprime < 1) { r = c; g = x; b = 0}
-	if (hprime >= 1 && hprime < 2) { r = x; g = c; b = 0}
-	if (hprime >= 2 && hprime < 3) { r = 0; g = c; b = x}
-	if (hprime >= 3 && hprime < 4) { r = 0; g = x; b = c}
-	if (hprime >= 4 && hprime < 5) { r = x; g = 0; b = c}
-	if (hprime >= 5 && hprime < 6) { r = c; g = 0; b = x}
-	
-	r = Math.round( (r + m)* 255);
-	g = Math.round( (g + m)* 255);
-	b = Math.round( (b + m)* 255);
-  
-	return { r, g, b };
-}
-
-function formatPixelColor (pixelColor) {
-	return `rgb(${pixelColor.r},${pixelColor.g},${pixelColor.b})`;
-}
+// Utils
+import { formatRGBObject, HSVtoRGB } from "../utils/color";
 
 export default function ColorPicker (props) {
 
@@ -58,13 +25,13 @@ export default function ColorPicker (props) {
 			<View style={styles.colorPicker}>
 				<SliderHuePicker
 					useNativeDriver={true}
-					oldColor={formatPixelColor(pixelColor)}
+					oldColor={formatRGBObject(pixelColor)}
 					trackStyle={styles.colorPickerTrack}
 					thumbStyle={styles.colorPickerThumb}
 					onColorChange={ hsvColor => updateCurrentColor(hsvColor) }
 				/>
 			</View>
-			<View style={[ styles.colorPreviewBox, { backgroundColor: formatPixelColor(pixelColor) } ]} />
+			<View style={[ styles.colorPreviewBox, { backgroundColor: formatRGBObject(pixelColor) } ]} />
 		</View>
 	);
 }
