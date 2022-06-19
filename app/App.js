@@ -132,7 +132,7 @@ export default class App extends React.Component {
 	}
 
 	paintPixel (pixelID, color) {
-		this.queueRenderCommand(`S${pixelID}|${color.r},${color.g},${color.b}|`);
+		this.queueRenderCommand(`P${pixelID}|${color.r},${color.g},${color.b}|`);
 	}
 
 	fillFrame (color) {

@@ -61,7 +61,7 @@ void renderCanvas (const CRGBArray<NUM_LEDS> &canvas, const char (&canvasData)[M
 	uint8_t colorChannelIndex = 0;
 	uint8_t colorChannelValuePosition = 0;
 
-	bool isSkipMode = false;
+	bool isPixelMode = false;
 	bool isFillMode = false;
 
 	std::string skipIndex = "";
@@ -81,12 +81,12 @@ void renderCanvas (const CRGBArray<NUM_LEDS> &canvas, const char (&canvasData)[M
 		switch (c) {
 			case '|':
 
-				if (isSkipMode) {
+				if (isPixelMode) {
 
 					pixelIndex = std::atoi(skipIndex.c_str());
 
 					skipIndex = "";
-					isSkipMode = false;
+					isPixelMode = false;
 
 				} else {
 
@@ -122,9 +122,9 @@ void renderCanvas (const CRGBArray<NUM_LEDS> &canvas, const char (&canvasData)[M
 				clearCanvas(canvas);
 				
 				break;
-			case 'S':
+			case 'P':
 
-				isSkipMode = true;
+				isPixelMode = true;
 
 				break;
 			case 'F':
@@ -134,7 +134,7 @@ void renderCanvas (const CRGBArray<NUM_LEDS> &canvas, const char (&canvasData)[M
 				break;
 			default:
 
-				if (isSkipMode) {
+				if (isPixelMode) {
 
 					skipIndex += c;
 
