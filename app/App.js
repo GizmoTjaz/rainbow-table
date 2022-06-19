@@ -22,11 +22,14 @@ export default class App extends React.Component {
 			isReady: false,
 			gridLinesState: false,
 			currentPixelColor: { r: 255, g: 255, b: 255 },
-			forcedPixelColor: null
+			forcedPixelColor: null,
+			renderQueue: []
 		}
 
 		this.ws = null;
 		this.reconnectInterval = 0;
+
+		this.renderInterval = setInterval(this.sendRenderQueue.bind(this), 10);
 	}
 
 	// WebSocket Connection
@@ -94,8 +97,42 @@ export default class App extends React.Component {
 		console.log(data);
 	}
 
+	sendRenderQueue () {
+		
+		if (this.state.renderQueue.length === 0) {
+			return;
+		}
+
+		const lastQueueElement = this.state.renderQueue[this.state.renderQueue.length - 1];
+		let _queue = "";
+
+		if (lastQueueElement.startsWith("F") || lastQueueElement.startsWith("C")) {
+			_queue = lastQueueElement;
+		} else {
+			_queue = this.state.renderQueue.map(cmd => {
+				if (cmd[cmd.length - 1] !== "|") {
+					return cmd + "|";
+				} else {
+					return cmd;
+				}
+			}).join("");
+		}
+
+		this.setState({
+			renderQueue: []
+		});
+
+		this.sendData(_queue);	
+	}
+
+	queueRenderCommand (cmd) {
+		this.setState({
+			renderQueue: [ ...this.state.renderQueue, cmd ]
+		});
+	}
+
 	paintPixel (pixelID, color) {
-		this.sendData(`S${pixelID}|${color.r},${color.g},${color.b}|`);
+		this.queueRenderCommand(`S${pixelID}|${color.r},${color.g},${color.b}|`);
 	}
 
 	fillFrame (color) {
@@ -104,7 +141,7 @@ export default class App extends React.Component {
 			forcedPixelColor: color
 		});
 
-		this.sendData(`F${color.r},${color.g},${color.b}|`);
+		this.queueRenderCommand(`F${color.r},${color.g},${color.b}|`);
 	}
 
 	clearFrame () {
@@ -113,7 +150,7 @@ export default class App extends React.Component {
 			forcedPixelColor: { r: 0, g: 0, b: 0 }
 		});
 
-		this.sendData("C");
+		this.queueRenderCommand("C");
 	}
 
 	// Lifecycle Events
@@ -135,7 +172,6 @@ export default class App extends React.Component {
 		};
 
 		fetchSaveData(this);
-
 	}
 
 	componentDidUpdate (_, prevState) {
