@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 
 // Components
-import { View, Pressable } from "react-native";
+import { View, Pressable, StyleSheet } from "react-native";
 
 // Utils
 import { formatRGBObject } from "../utils/color";
@@ -44,3 +44,10 @@ export default function Pixel (props) {
 		</Pressable>
 	);
 }
+
+const styles = StyleSheet.create({
+	buttonBorder: {
+		borderWidth: 1,
+		borderColor: "#444"
+	}
+});
