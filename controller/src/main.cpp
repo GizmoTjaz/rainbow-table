@@ -52,12 +52,12 @@ char packet[MAX_PACKET_LENGTH] = {};
 size_t packetLength = 0;
 
 bool isBusyRendering = false;
-bool isInAnimationMode = true;
-bool isStartupAnimation = true;
+bool isInAnimationMode = false;
+bool isStartupAnimation = false;
 
-// IPAddress localIP(192, 168, 1, 69);
-// IPAddress gateway(192, 168, 1, 1);
-// IPAddress subnet(255, 255, 0, 0);
+IPAddress localIP(172, 20, 10, 2);
+IPAddress gateway(172, 20, 10, 1);
+IPAddress subnet(255, 255, 255, 240);
 
 void connectToWiFiNetwork () {
 
@@ -118,7 +118,7 @@ void setup () {
 		Serial.println(WiFi.softAPIP());
 
 	} else {
-		// WiFi.config(localIP, gateway, subnet);
+		WiFi.config(localIP, gateway, subnet);
 		connectToWiFiNetwork();
 	}
 
@@ -195,6 +195,9 @@ void setup () {
 	DefaultHeaders::Instance().addHeader("Access-Control-Allow-Headers", "*");
 
 	server.begin();
+
+	isInAnimationMode = true;
+	isStartupAnimation = true;
 }
 
 void loop () {
