@@ -68,7 +68,7 @@ export default class App extends React.Component {
 			this.disconnect();
 		}
 
-		this.ws = new WebSocket("ws://192.168.64.1/ws");
+		this.ws = new WebSocket("ws://172.20.10.2/ws");
 
 		this.ws.addEventListener("open", this.socketOpenHandler.bind(this));
 		this.ws.addEventListener("error", this.socketErrorHandler);
