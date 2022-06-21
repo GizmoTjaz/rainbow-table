@@ -40,20 +40,20 @@ CRGBArray<NUM_LEDS> canvas;
 AsyncWebServer server(80);
 AsyncWebSocket ws("/ws");
 
+// Animations
+SnakeAnimation snakeAnimation = SnakeAnimation(canvas);
+
+AnimationProfile *currentAnimation = &snakeAnimation; 
+CRGB currentAnimationColor = CRGB(255, 255, 255);
+int animationFrameCounter = 0;
+
 // Variables
 char packet[MAX_PACKET_LENGTH] = {};
 size_t packetLength = 0;
 
-union AnimationProfiles {
-	SnakeAnimation snake;
-};
-
-int animationFrameCounter = 0;
-CRGB currentAnimationColor = CRGB(255, 255, 255);
-SnakeAnimation currentAnimation = SnakeAnimation(canvas);
-
 bool isBusyRendering = false;
 bool isInAnimationMode = true;
+bool isStartupAnimation = true;
 
 // IPAddress localIP(192, 168, 1, 69);
 // IPAddress gateway(192, 168, 1, 1);
@@ -74,7 +74,12 @@ void connectToWiFiNetwork () {
 
 void setup () {
 
+	// currentAnimation = &snakeAnimation;
+	// isInAnimationMode = true;
+
 	Serial.begin(9600);
+
+	// Set up canvas
 
 	FastLED.addLeds<NEOPIXEL, MATRIX_DATA_PIN>(canvas, NUM_LEDS);
 	FastLED.setMaxPowerInVoltsAndMilliamps(5, 800);
@@ -150,8 +155,17 @@ void setup () {
 				if (packetLength == info->len) {
 
 					isBusyRendering = true;
+					isInAnimationMode = false;
 
-					renderCanvas(canvas, packet, packetLength);
+					if (packet[0] == 'A') {
+
+						//bool success = startAnimation(packet, packetLength, currentAnimation, currentAnimationColor);
+
+						//isInAnimationMode = success;
+
+					} else {
+						renderCanvas(canvas, packet, packetLength);
+					}
 
 					memset(packet, 0, sizeof packet);
 					packetLength = 0;
@@ -188,11 +202,18 @@ void loop () {
 
 		if (isInAnimationMode) {
 
-			currentAnimation.renderFrame(animationFrameCounter, currentAnimationColor);
+			currentAnimation->renderFrame(animationFrameCounter, currentAnimationColor);
 
 			animationFrameCounter++;
 
-			if (animationFrameCounter > currentAnimation.numFrames) {
+			if (animationFrameCounter > currentAnimation->numFrames) {
+
+				if (isStartupAnimation) {
+					isStartupAnimation = false;
+					isInAnimationMode = false;
+					currentAnimation = nullptr;
+				}
+
 				animationFrameCounter = 0;
 				clearCanvas(canvas);
 			}
