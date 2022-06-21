@@ -26,6 +26,12 @@ export default function Pixel (props) {
 		}
 	}, [ props.forcedPixelColor ] );
 
+	useEffect(() => {
+		if (props.forcedHoverPixelColor) {
+			updateColor(props.forcedHoverPixelColor, true);
+		}
+	}, [ props.forcedHoverPixelColor ]);
+
 	return (
 		<Pressable
 			hitSlop={0}
