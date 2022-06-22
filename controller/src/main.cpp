@@ -196,6 +196,7 @@ void setup () {
 
 	server.begin();
 
+	delay(250);
 	isInAnimationMode = true;
 	isStartupAnimation = true;
 }
