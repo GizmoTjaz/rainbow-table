@@ -173,9 +173,8 @@ void loop () {
 
 			animationFrameCounter++;
 
-			if (animationFrameCounter > currentAnimation->numFrames) {
+			if (animationFrameCounter >= currentAnimation->numFrames) {
 				animationFrameCounter = 0;
-				clearCanvas(canvas);
 			}
 
 			delay(FRAME_INTERVAL);
