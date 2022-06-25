@@ -85,7 +85,7 @@ void setup () {
 			case SYSTEM_EVENT_STA_DISCONNECTED:
 
 				Serial.println("Disconnected from Wi-Fi. Attempting to reconnect...");
-				connectToWiFiNetwork();
+				connectToWiFiNetwork(WIFI_SSID, WIFI_PASSWORD);
 
 			default:
 				break;
