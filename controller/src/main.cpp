@@ -26,8 +26,8 @@
 #include "connection.h"
 
 // Animations
-#include "snake.h"
-#include "rina.h"
+#include "../animations/rina_asleep.h"
+#include "../animations/rina_wink.h"
 
 // Structs
 CRGBArray<NUM_LEDS> canvas;
@@ -35,10 +35,10 @@ AsyncWebServer server(80);
 AsyncWebSocket ws("/ws");
 
 // Animations
-SnakeAnimation snakeAnimation = SnakeAnimation(canvas);
-RinaAnimation rinaAnimation = RinaAnimation(canvas);
+RinaAsleep ANIM_RinaAsleep = RinaAsleep(canvas);
+RinaWink ANIM_RinaWink = RinaWink(canvas);
 
-AnimationProfile *currentAnimation = &snakeAnimation; 
+AnimationProfile *currentAnimation = nullptr; 
 CRGB currentAnimationColor = CRGB(255, 255, 255);
 int animationFrameCounter = 0;
 
@@ -54,35 +54,47 @@ void setup () {
 	Serial.begin(9600);
 
 	// Set up canvas
-
 	FastLED.addLeds<NEOPIXEL, MATRIX_DATA_PIN>(canvas, NUM_LEDS);
 	FastLED.setMaxPowerInVoltsAndMilliamps(5, 800);
 
 	clearCanvas(canvas);
 
-	currentAnimation = &rinaAnimation;
+	// Set up startup animation
+	currentAnimation = &ANIM_RinaAsleep;
 	isInAnimationMode = true;
 
 	WiFi.onEvent([](WiFiEvent_t event, WiFiEventInfo_t info) {
 		switch (event) {
 			case SYSTEM_EVENT_AP_STACONNECTED:
+
+				currentAnimation = &ANIM_RinaWink;
+				isInAnimationMode = true;
 				
 				// Serial.print("Client connected: ");
 				// Serial.println(info.got_ip.ip_info.ip.addr);
 				
 				break;
 			case SYSTEM_EVENT_AP_STADISCONNECTED:
-				
+
+				currentAnimation = &ANIM_RinaAsleep;
+				isInAnimationMode = true;
+
 				// Serial.print("Client disconnected: ");
 				// Serial.println(info.got_ip.ip_info.ip.addr);
 
 				break;
 			case SYSTEM_EVENT_STA_CONNECTED:
 
+				currentAnimation = &ANIM_RinaWink;
+				isInAnimationMode = true;
+
 				Serial.print("Connected to Wi-Fi with IP: ");
 				Serial.println(WiFi.localIP());
 
 			case SYSTEM_EVENT_STA_DISCONNECTED:
+
+				currentAnimation = &ANIM_RinaAsleep;
+				isInAnimationMode = true;
 
 				Serial.println("Disconnected from Wi-Fi. Attempting to reconnect...");
 				connectToWiFiNetwork(WIFI_SSID, WIFI_PASSWORD);
