@@ -4,14 +4,6 @@
 #define SERVER_MODE true
 #endif
 
-#ifndef WIFI_SSID
-#define WIFI_SSID "Mavrična Tabla"
-#endif
-
-#ifndef WIFI_PASSWORD
-#define WIFI_PASSWORD "123456789"
-#endif
-
 #define NUM_LEDS NUM_LEDS_ROW * NUM_LEDS_COLUMN
 #define MAX_PACKET_LENGTH NUM_LEDS * (3 * 3 + 2 + 1)
 #define FRAME_INTERVAL 1 / 30 * 1000
@@ -31,9 +23,11 @@
 // Utils
 #include "render.h"
 #include "animation.h"
+#include "connection.h"
 
 // Animations
 #include "snake.h"
+#include "rina.h"
 
 // Structs
 CRGBArray<NUM_LEDS> canvas;
@@ -42,6 +36,7 @@ AsyncWebSocket ws("/ws");
 
 // Animations
 SnakeAnimation snakeAnimation = SnakeAnimation(canvas);
+RinaAnimation rinaAnimation = RinaAnimation(canvas);
 
 AnimationProfile *currentAnimation = &snakeAnimation; 
 CRGB currentAnimationColor = CRGB(255, 255, 255);
@@ -68,6 +63,9 @@ void setup () {
 	FastLED.setMaxPowerInVoltsAndMilliamps(5, 800);
 
 	clearCanvas(canvas);
+
+	currentAnimation = &rinaAnimation;
+	isInAnimationMode = true;
 
 	WiFi.onEvent([](WiFiEvent_t event, WiFiEventInfo_t info) {
 		switch (event) {
@@ -173,9 +171,9 @@ void setup () {
 
 	server.begin();
 
-	delay(250);
-	isInAnimationMode = true;
-	isStartupAnimation = true;
+	// delay(250);
+	// isInAnimationMode = true;
+	// isStartupAnimation = true;
 }
 
 void loop () {
