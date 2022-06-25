@@ -34,7 +34,7 @@ class RinaWink : public AnimationProfile {
 	public:
 		
 		void renderFrame (const size_t &frameNumber, const CRGB &animationColor) {
-			renderCanvas(this->canvas, RINA_WINK, RINA_WINK_length);
+			renderCanvas(this->canvas, RINA_WINK, RINA_WINK_LENGTH);
 		}
 
 		RinaWink (const CRGBArray<NUM_LEDS> &canvas): AnimationProfile(canvas) {}
