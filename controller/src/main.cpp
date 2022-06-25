@@ -60,16 +60,16 @@ IPAddress gateway(172, 20, 10, 1);
 IPAddress subnet(255, 255, 255, 240);
 
 void connectToWiFiNetwork () {
-
+	WiFi.config(localIP, gateway, subnet);
 	WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+}
 
-	while (WiFi.status() != WL_CONNECTED) {
-		delay(500);
-		Serial.print(".");
-	}
+void createWiFiHotspot () {
 
-	Serial.print("\nLocal IP address: ");
-	Serial.println(WiFi.localIP());
+	WiFi.softAP(WIFI_SSID, WIFI_PASSWORD);
+
+	Serial.print("Server IP address: ");
+	Serial.println(WiFi.softAPIP());
 }
 
 void setup () {
@@ -111,14 +111,8 @@ void setup () {
 	});
 
 	if (SERVER_MODE) {
-
-		WiFi.softAP(WIFI_SSID, WIFI_PASSWORD);
-
-		Serial.print("Server IP address: ");
-		Serial.println(WiFi.softAPIP());
-
+		createWiFiHotspot();
 	} else {
-		WiFi.config(localIP, gateway, subnet);
 		connectToWiFiNetwork();
 	}
 
