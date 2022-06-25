@@ -1,5 +1,4 @@
-#ifndef ANIMATION_H
-#define ANIMATION_H
+#pragma once
 
 // Utils
 #include "render.h"
@@ -22,5 +21,3 @@ class AnimationProfile {
 		AnimationProfile (const CRGBArray<NUM_LEDS> &canvas): canvas(canvas) {}
 
 };
-
-#endif

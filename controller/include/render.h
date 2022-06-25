@@ -1,5 +1,4 @@
-#ifndef RENDER_H
-#define RENDER_H
+#pragma once
 
 // Core
 #include <string>
@@ -148,5 +147,3 @@ void renderCanvas (const CRGBArray<NUM_LEDS> &canvas, const char (&canvasData)[M
 	}
 
 }
-
-#endif

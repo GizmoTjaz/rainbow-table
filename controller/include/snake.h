@@ -1,5 +1,4 @@
-#ifndef SNAKE_H
-#define SNAKE_H
+#pragma once
 
 // Utils
 #include "animation.h"
@@ -15,5 +14,3 @@ class SnakeAnimation : public AnimationProfile {
 		SnakeAnimation (const CRGBArray<NUM_LEDS> &canvas): AnimationProfile(canvas) {}
 
 };
-
-#endif
