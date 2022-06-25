@@ -55,23 +55,6 @@ bool isBusyRendering = false;
 bool isInAnimationMode = false;
 bool isStartupAnimation = false;
 
-IPAddress localIP(172, 20, 10, 2);
-IPAddress gateway(172, 20, 10, 1);
-IPAddress subnet(255, 255, 255, 240);
-
-void connectToWiFiNetwork () {
-	WiFi.config(localIP, gateway, subnet);
-	WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
-}
-
-void createWiFiHotspot () {
-
-	WiFi.softAP(WIFI_SSID, WIFI_PASSWORD);
-
-	Serial.print("Server IP address: ");
-	Serial.println(WiFi.softAPIP());
-}
-
 void setup () {
 
 	// currentAnimation = &snakeAnimation;
@@ -111,9 +94,9 @@ void setup () {
 	});
 
 	if (SERVER_MODE) {
-		createWiFiHotspot();
+		createWiFiHotspot(WIFI_SSID, WIFI_PASSWORD);
 	} else {
-		connectToWiFiNetwork();
+		connectToWiFiNetwork(WIFI_SSID, WIFI_PASSWORD);
 	}
 
 	ws.onEvent([](AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t dataLength) {
