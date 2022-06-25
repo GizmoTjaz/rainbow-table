@@ -48,12 +48,8 @@ size_t packetLength = 0;
 
 bool isBusyRendering = false;
 bool isInAnimationMode = false;
-bool isStartupAnimation = false;
 
 void setup () {
-
-	// currentAnimation = &snakeAnimation;
-	// isInAnimationMode = true;
 
 	Serial.begin(9600);
 
