@@ -81,9 +81,14 @@ void setup () {
 				// Serial.println(info.got_ip.ip_info.ip.addr);
 
 				break;
+			case SYSTEM_EVENT_STA_CONNECTED:
+
+				Serial.print("Connected to Wi-Fi with IP: ");
+				Serial.println(WiFi.localIP());
+
 			case SYSTEM_EVENT_STA_DISCONNECTED:
 
-				Serial.println("Disconnected from Wi-Fi network. Attempting to reconnect...");
+				Serial.println("Disconnected from Wi-Fi. Attempting to reconnect...");
 				connectToWiFiNetwork();
 
 			default:
