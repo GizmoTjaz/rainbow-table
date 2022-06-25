@@ -132,15 +132,7 @@ void setup () {
 					isBusyRendering = true;
 					isInAnimationMode = false;
 
-					if (packet[0] == 'A') {
-
-						//bool success = startAnimation(packet, packetLength, currentAnimation, currentAnimationColor);
-
-						//isInAnimationMode = success;
-
-					} else {
-						renderCanvas(canvas, packet, packetLength);
-					}
+					renderCanvas(canvas, packet, packetLength);
 
 					memset(packet, 0, sizeof packet);
 					packetLength = 0;
@@ -170,10 +162,6 @@ void setup () {
 	DefaultHeaders::Instance().addHeader("Access-Control-Allow-Headers", "*");
 
 	server.begin();
-
-	// delay(250);
-	// isInAnimationMode = true;
-	// isStartupAnimation = true;
 }
 
 void loop () {
@@ -186,13 +174,6 @@ void loop () {
 			animationFrameCounter++;
 
 			if (animationFrameCounter > currentAnimation->numFrames) {
-
-				if (isStartupAnimation) {
-					isStartupAnimation = false;
-					isInAnimationMode = false;
-					currentAnimation = nullptr;
-				}
-
 				animationFrameCounter = 0;
 				clearCanvas(canvas);
 			}
