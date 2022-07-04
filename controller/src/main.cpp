@@ -46,6 +46,8 @@ int animationFrameCounter = 0;
 char packet[MAX_PACKET_LENGTH] = {};
 size_t packetLength = 0;
 
+bool hasPainted = false;
+
 bool isBusyRendering = false;
 bool isInAnimationMode = false;
 
@@ -80,6 +82,11 @@ void setup () {
 				break;
 			case SYSTEM_EVENT_AP_STADISCONNECTED:
 
+				if (!hasPainted) {
+					currentAnimation = &ANIM_RinaAsleep;
+					isInAnimationMode = true;
+				}
+
 				// Serial.print("Client disconnected: ");
 				// Serial.println(info.got_ip.ip_info.ip.addr);
 
@@ -92,6 +99,11 @@ void setup () {
 				Serial.println(WiFi.localIP());
 
 			case SYSTEM_EVENT_STA_DISCONNECTED:
+
+				if (!hasPainted) {
+					currentAnimation = &ANIM_RinaAsleep;
+					isInAnimationMode = true;
+				}
 
 				Serial.println("Disconnected from Wi-Fi. Attempting to reconnect...");
 				connectToWiFiNetwork(WIFI_SSID, WIFI_PASSWORD);
@@ -141,6 +153,8 @@ void setup () {
 
 					isBusyRendering = true;
 					disableAnimations();
+
+					hasPainted = true;
 
 					renderCanvas(canvas, packet, packetLength);
 
