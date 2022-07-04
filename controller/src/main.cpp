@@ -74,7 +74,12 @@ void setup () {
 		switch (event) {
 			case SYSTEM_EVENT_AP_STACONNECTED:
 
-				disableAnimations();
+				if (!hasPainted) {
+					currentAnimation = &ANIM_RinaWink;
+					isInAnimationMode = true;
+				} else {
+					disableAnimations();
+				}
 				
 				// Serial.print("Client connected: ");
 				// Serial.println(info.got_ip.ip_info.ip.addr);
@@ -93,7 +98,12 @@ void setup () {
 				break;
 			case SYSTEM_EVENT_STA_CONNECTED:
 
-				disableAnimations();
+				if (!hasPainted) {
+					currentAnimation = &ANIM_RinaWink;
+					isInAnimationMode = true;
+				} else {
+					disableAnimations();
+				}
 
 				Serial.print("Connected to Wi-Fi with IP: ");
 				Serial.println(WiFi.localIP());
