@@ -51,7 +51,12 @@ bool hasPainted = false;
 bool isBusyRendering = false;
 bool isInAnimationMode = false;
 
-void disableAnimations () {
+void enableAnimation (AnimationProfile *animation) {
+	currentAnimation = animation;
+	isInAnimationMode = true;
+}
+
+void disableAnimation () {
 	isInAnimationMode = false;
 	currentAnimation = nullptr;
 }
@@ -67,18 +72,16 @@ void setup () {
 	clearCanvas(canvas);
 
 	// Set up startup animation
-	currentAnimation = &ANIM_RinaAsleep;
-	isInAnimationMode = true;
+	enableAnimation(&ANIM_RinaAsleep);
 
 	WiFi.onEvent([](WiFiEvent_t event, WiFiEventInfo_t info) {
 		switch (event) {
 			case SYSTEM_EVENT_AP_STACONNECTED:
 
 				if (!hasPainted) {
-					currentAnimation = &ANIM_RinaWink;
-					isInAnimationMode = true;
+					enableAnimation(&ANIM_RinaWink);
 				} else {
-					disableAnimations();
+					disableAnimation();
 				}
 				
 				// Serial.print("Client connected: ");
@@ -88,8 +91,7 @@ void setup () {
 			case SYSTEM_EVENT_AP_STADISCONNECTED:
 
 				if (!hasPainted) {
-					currentAnimation = &ANIM_RinaAsleep;
-					isInAnimationMode = true;
+					enableAnimation(&ANIM_RinaAsleep);
 				}
 
 				// Serial.print("Client disconnected: ");
@@ -99,10 +101,9 @@ void setup () {
 			case SYSTEM_EVENT_STA_CONNECTED:
 
 				if (!hasPainted) {
-					currentAnimation = &ANIM_RinaWink;
-					isInAnimationMode = true;
+					enableAnimation(&ANIM_RinaWink);
 				} else {
-					disableAnimations();
+					disableAnimation();
 				}
 
 				Serial.print("Connected to Wi-Fi with IP: ");
@@ -111,8 +112,7 @@ void setup () {
 			case SYSTEM_EVENT_STA_DISCONNECTED:
 
 				if (!hasPainted) {
-					currentAnimation = &ANIM_RinaAsleep;
-					isInAnimationMode = true;
+					enableAnimation(&ANIM_RinaAsleep);
 				}
 
 				Serial.println("Disconnected from Wi-Fi. Attempting to reconnect...");
@@ -162,7 +162,7 @@ void setup () {
 				if (packetLength == info->len) {
 
 					isBusyRendering = true;
-					disableAnimations();
+					disableAnimation();
 
 					hasPainted = true;
 
