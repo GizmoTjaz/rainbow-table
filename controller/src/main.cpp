@@ -67,8 +67,8 @@ void setup () {
 		switch (event) {
 			case SYSTEM_EVENT_AP_STACONNECTED:
 
-				currentAnimation = &ANIM_RinaWink;
-				isInAnimationMode = true;
+				isInAnimationMode = false;
+				currentAnimation = nullptr;
 				
 				// Serial.print("Client connected: ");
 				// Serial.println(info.got_ip.ip_info.ip.addr);
@@ -82,8 +82,8 @@ void setup () {
 				break;
 			case SYSTEM_EVENT_STA_CONNECTED:
 
-				currentAnimation = &ANIM_RinaWink;
-				isInAnimationMode = true;
+				isInAnimationMode = false;
+				currentAnimation = nullptr;
 
 				Serial.print("Connected to Wi-Fi with IP: ");
 				Serial.println(WiFi.localIP());
