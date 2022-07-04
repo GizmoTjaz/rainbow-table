@@ -76,9 +76,6 @@ void setup () {
 				break;
 			case SYSTEM_EVENT_AP_STADISCONNECTED:
 
-				currentAnimation = &ANIM_RinaAsleep;
-				isInAnimationMode = true;
-
 				// Serial.print("Client disconnected: ");
 				// Serial.println(info.got_ip.ip_info.ip.addr);
 
@@ -92,9 +89,6 @@ void setup () {
 				Serial.println(WiFi.localIP());
 
 			case SYSTEM_EVENT_STA_DISCONNECTED:
-
-				currentAnimation = &ANIM_RinaAsleep;
-				isInAnimationMode = true;
 
 				Serial.println("Disconnected from Wi-Fi. Attempting to reconnect...");
 				connectToWiFiNetwork(WIFI_SSID, WIFI_PASSWORD);
