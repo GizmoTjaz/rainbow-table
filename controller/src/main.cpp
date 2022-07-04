@@ -49,6 +49,11 @@ size_t packetLength = 0;
 bool isBusyRendering = false;
 bool isInAnimationMode = false;
 
+void disableAnimations () {
+	isInAnimationMode = false;
+	currentAnimation = nullptr;
+}
+
 void setup () {
 
 	Serial.begin(9600);
@@ -67,8 +72,7 @@ void setup () {
 		switch (event) {
 			case SYSTEM_EVENT_AP_STACONNECTED:
 
-				isInAnimationMode = false;
-				currentAnimation = nullptr;
+				disableAnimations();
 				
 				// Serial.print("Client connected: ");
 				// Serial.println(info.got_ip.ip_info.ip.addr);
@@ -82,8 +86,7 @@ void setup () {
 				break;
 			case SYSTEM_EVENT_STA_CONNECTED:
 
-				isInAnimationMode = false;
-				currentAnimation = nullptr;
+				disableAnimations();
 
 				Serial.print("Connected to Wi-Fi with IP: ");
 				Serial.println(WiFi.localIP());
@@ -137,7 +140,7 @@ void setup () {
 				if (packetLength == info->len) {
 
 					isBusyRendering = true;
-					isInAnimationMode = false;
+					disableAnimations();
 
 					renderCanvas(canvas, packet, packetLength);
 
