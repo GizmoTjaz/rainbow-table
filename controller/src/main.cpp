@@ -109,6 +109,7 @@ void setup () {
 				Serial.print("Connected to Wi-Fi with IP: ");
 				Serial.println(WiFi.localIP());
 
+				break;
 			case SYSTEM_EVENT_STA_DISCONNECTED:
 
 				if (!hasPainted) {
