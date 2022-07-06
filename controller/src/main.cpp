@@ -162,9 +162,11 @@ void setup () {
 				if (packetLength == info->len) {
 
 					isBusyRendering = true;
-					disableAnimation();
-
 					hasPainted = true;
+					
+					if (isInAnimationMode) {
+						disableAnimation();
+					}
 
 					renderCanvas(canvas, packet, packetLength);
 
