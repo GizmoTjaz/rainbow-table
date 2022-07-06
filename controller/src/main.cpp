@@ -204,7 +204,7 @@ void setup () {
 void loop () {
 	if (!isBusyRendering) {
 
-		if (isInAnimationMode) {
+		if (isInAnimationMode && currentAnimation) {
 
 			currentAnimation->renderFrame(animationFrameCounter, currentAnimationColor);
 
