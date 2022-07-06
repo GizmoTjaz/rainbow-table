@@ -57,8 +57,14 @@ void enableAnimation (AnimationProfile *animation) {
 }
 
 void disableAnimation () {
+
 	isInAnimationMode = false;
 	currentAnimation = nullptr;
+
+	// Remove any leftover frames
+	delay(FRAME_INTERVAL);
+	clearCanvas(canvas);
+
 }
 
 void setup () {
