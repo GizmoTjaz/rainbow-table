@@ -84,8 +84,8 @@ void setup () {
 					disableAnimation();
 				}
 				
-				// Serial.print("Client connected: ");
-				// Serial.println(info.got_ip.ip_info.ip.addr);
+				Serial.print("Client connected: ");
+				Serial.println(info.got_ip.ip_info.ip.addr);
 				
 				break;
 			case SYSTEM_EVENT_AP_STADISCONNECTED:
@@ -94,8 +94,8 @@ void setup () {
 					enableAnimation(&ANIM_RinaAsleep);
 				}
 
-				// Serial.print("Client disconnected: ");
-				// Serial.println(info.got_ip.ip_info.ip.addr);
+				Serial.print("Client disconnected: ");
+				Serial.println(info.got_ip.ip_info.ip.addr);
 
 				break;
 			case SYSTEM_EVENT_STA_CONNECTED:
