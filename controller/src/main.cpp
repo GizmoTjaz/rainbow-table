@@ -53,6 +53,7 @@ bool isInAnimationMode = false;
 
 void enableAnimation (AnimationProfile *animation) {
 	currentAnimation = animation;
+	animationFrameCounter = 0;
 	isInAnimationMode = true;
 }
 
@@ -60,6 +61,7 @@ void disableAnimation () {
 
 	isInAnimationMode = false;
 	currentAnimation = nullptr;
+	animationFrameCounter = 0;
 
 	// Remove any leftover frames
 	delay(FRAME_INTERVAL);
