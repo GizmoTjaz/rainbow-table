@@ -53,7 +53,6 @@ bool isInAnimationMode = false;
 
 void enableAnimation (AnimationProfile *animation) {
 	currentAnimation = animation;
-	animationFrameCounter = 0;
 	isInAnimationMode = true;
 }
 
