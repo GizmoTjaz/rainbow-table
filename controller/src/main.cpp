@@ -107,6 +107,7 @@ void setup () {
 
 				break;
 			case SYSTEM_EVENT_STA_CONNECTED:
+			case SYSTEM_EVENT_STA_GOT_IP: // Why?
 
 				if (!hasPainted) {
 					enableAnimation(&ANIM_RinaWink);
