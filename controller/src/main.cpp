@@ -91,7 +91,7 @@ void setup () {
 				} else {
 					disableAnimation();
 				}
-				
+
 				Serial.print("Client connected: ");
 				Serial.println(info.got_ip.ip_info.ip.addr);
 				
@@ -177,7 +177,7 @@ void setup () {
 					if (isInAnimationMode) {
 						disableAnimation();
 					}
-
+					
 					renderCanvas(canvas, packet, packetLength);
 
 					memset(packet, 0, sizeof packet);
