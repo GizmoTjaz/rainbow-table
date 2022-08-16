@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"name": "root",
+			"path": "."
+		},
+		{
+			"name": "controller",
+			"path": "./controller"
+		},
+		{
+			"name": "app",
+			"path": "./app"
+		}
+	]
+}
