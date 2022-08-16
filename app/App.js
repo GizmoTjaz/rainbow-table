@@ -3,13 +3,14 @@ import { registerRootComponent } from "expo";
 import { BleManager } from "react-native-ble-plx";
 
 // Components
-import { SafeAreaView, Text } from "react-native";
 import { useEffect } from "react";
+import { SafeAreaView, Text } from "react-native";
+import { StatusBar } from "expo-status-bar";
 
 // Globals
 const manager = new BleManager();
 
-function App () {
+export default function App () {
 
 	function scanAndConnect () {
 		manager.startDeviceScan(null, null, (error, device) => {
@@ -52,9 +53,8 @@ function App () {
 
 	return (
 		<SafeAreaView>
+			<StatusBar style="auto" />
 			<Text>App</Text>
 		</SafeAreaView>
 	);
 }
-
-export default registerRootComponent(App);
