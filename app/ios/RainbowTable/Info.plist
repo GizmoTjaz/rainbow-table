@@ -71,8 +71,8 @@
     <key>UIUserInterfaceStyle</key>
     <string>Dark</string>
     <key>UIViewControllerBasedStatusBarAppearance</key>
+    <false/>
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>This app uses Bluetooth to connect to Rainbow Table.</string>
-    <false/>
   </dict>
 </plist>
