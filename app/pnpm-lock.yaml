@@ -3,13 +3,11 @@ lockfileVersion: 5.4
 specifiers:
   '@babel/core': ^7.12.9
   expo: ~46.0.7
-  expo-status-bar: ~1.4.0
   react: 18.0.0
   react-native: 0.69.4
 
 dependencies:
   expo: 46.0.7_@babel+core@7.18.10
-  expo-status-bar: 1.4.0
   react: 18.0.0
   react-native: 0.69.4_react@18.0.0
 
@@ -3263,10 +3261,6 @@ packages:
     dependencies:
       compare-versions: 3.6.0
       invariant: 2.2.4
-    dev: false
-
-  /expo-status-bar/1.4.0:
-    resolution: {integrity: sha512-vh98g8qMIjig/2XTBsoAWS6Vo2dIIwDWjB3/GiuZ9Lazpxc9GO/APfJ4dar7MibzIDUKIrjotrcL6rLdPH13Ew==}
     dev: false
 
   /expo/46.0.7_@babel+core@7.18.10:
