@@ -6,7 +6,6 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
-	
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -20,14 +19,15 @@
     ],
     "ios": {
       "supportsTablet": true,
-	  "bundleIdentifier": "com.gizmo.rainbowtable",
-		"backgroundColor": "#0d0d0d"
+      "bundleIdentifier": "com.gizmo.rainbowtable",
+      "backgroundColor": "#0d0d0d"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#0d0d0d"
-      }
+      },
+      "package": "com.gizmo.rainbowtable"
     },
     "web": {
       "favicon": "./assets/favicon.png"
